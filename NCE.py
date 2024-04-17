@@ -8,7 +8,7 @@ from torch import logexp
 
 # en init funktion containing all parameters for NCE
 
-def NCE(torch.nn.Module):
+class NCE(torch.nn.Module):
 
     def __init__(self, c, ptilde, phi):
         super(NCE, self).__init__()
