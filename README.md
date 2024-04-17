@@ -2,7 +2,10 @@
 Introduction to problem + solution
 
 ## Set-up
-Set-up
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
 ## Reproduce results
 ```
