@@ -2,6 +2,8 @@
 Introduction to problem + solution
 
 ## Set-up
+We chose to use [make](https://www.gnu.org/software/make/) to automate our processes and improve ease-of-use when using our repo. See [here](https://stackoverflow.com/questions/32127524/how-to-install-and-use-make-in-windows) to install on windows or use ```brew install make``` if you're on a macbook.
+
 First, run these commands to setup the project:
 ```
 python3 -m venv .venv
