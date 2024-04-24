@@ -19,7 +19,7 @@ class NCE(torch.nn.Module):
         M = len(self.c)
 
     def log_p_TG(self, ptilde, c): # This is the log exp for the single torus graph
-        return torch.logexp(ptilde + c)
+        return torch.log(torch.exp(ptilde + c))
     
     def log_p_TGMM(self, ptilde, c): # This is the log exp for the multible torus graph hence a sum.
         return torch.logsumexp(ptilde + c) 
