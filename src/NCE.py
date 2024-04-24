@@ -4,7 +4,6 @@ import torch as torch
 import numpy as np
 import math
 from torch import logsumexp
-from torch import logexp
 
 # en init funktion containing all parameters for NCE
 
@@ -19,10 +18,11 @@ class NCE(torch.nn.Module):
         M = len(self.c)
 
     def log_p_TG(self, ptilde, c): # This is the log exp for the single torus graph
-        return torch.logexp(ptilde + c)
+        # 1. Implement the logsumexp function. This below is probably not right. 
+        return torch.log(torch.exp(ptilde + c)) 
     
     def log_p_TGMM(self, ptilde, c): # This is the log exp for the multible torus graph hence a sum.
-        return torch.logsumexp(ptilde + c) 
+        return logsumexp(ptilde + c) 
 
     def loss(self, phi, c, y, x, theta,p,n): 
         # n(x),n(y) is a noise function that is not implemented yet.
