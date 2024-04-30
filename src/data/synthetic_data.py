@@ -9,6 +9,10 @@ import numpy as np
 
 from typing import List, Tuple, Any
 
+## ----------- ##
+## ---UTILS--- ##
+## ----------- ##
+
 def createNodePairs(nodes: int) -> np.ndarray[np.ndarray[int, int]]:
     numNodePairs = int(nodes*(nodes-1)/2)
     nodePairsNodes = np.zeros((numNodePairs, 2), dtype=int)
@@ -31,6 +35,20 @@ def samplePhi(
     # size should be:
     # 2 * number of nodePairs for each fitting method
     return np.array([[0, 0, 0, 0], [8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0]])
+
+def harmonicAddition(amps, phases):
+    # inputs are numpy arrays
+    bx = sum(amps*np.cos(phases))
+    by = sum(amps*np.sin(phases))
+
+    resAmp = np.sqrt(bx**2 + by**2)
+    resPhase = np.arctan2(by, bx)
+
+    return (resAmp, resPhase)
+
+## -------------- ##
+## ---SAMPLING--- ##
+## -------------- ##
 
 def sampleFromTorusGraph(
     nodes   : int, 
