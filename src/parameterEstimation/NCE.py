@@ -23,6 +23,7 @@ class NCE(torch.nn.Module):
         self.theta1 = theta[0]
         self.theta2 = theta[1]
         self.c = torch.nn.parameter.Parameter(torch.tensor(1.0, requires_grad=True)*torch.ones(M))
+        self.pi = torch.nn.parameter.Parameter(torch.rand(size=(M,1), requires_grad=True))
 
         #dimensioner
         # theta, pi
@@ -54,6 +55,7 @@ class NCE(torch.nn.Module):
         The estimated theta for the torus graph model and the constant c.
         
         """
+        self.M = 1 # For the TG model there is only one mixture component
         optimizer = optim.SGD([self.theta,self.c], lr=0.01)
 
         for epoch in range(num_epochs):
@@ -106,11 +108,14 @@ class NCE(torch.nn.Module):
             The estimated theta for the torus graphs.
             The estimated pi for the mixture model.
         """
-        # M is the number of torus graphs
-        M = data.shape[0]
-        theta = torch.tensor([1.0]*M, requires_grad=True)
-        pi = torch.tensor([1.0]*M, requires_grad=True)
-        optimizer = optim.SGD([theta, pi], lr=0.01)
+        # IDEA: outer loop with the mixture component where pi is optimized
+        # inner loop where theta and c are optimized.
+        # log of sum of pi * tg models
+        # TODO: how to ensure that pi is a vector that sums to 1
+
+        optimizer_outer = optim.SGD([self.pi], lr = 0.01)
+
+        optimizer_inner = optim.SGD([self.theta, self.c], lr=0.01)
 
         for epoch in range(num_epochs):
             data_samples = torch.tensor(np.random.choice(data, size=100), dtype=torch.float32)
@@ -125,8 +130,8 @@ class NCE(torch.nn.Module):
 
             nce_loss = -log_data_prob.mean() + log_noise_prob.mean()
             nce_loss.backward()
-            optimizer.step()
-            optimizer.zero_grad()
+            optimizer_inner.step()
+            optimizer_inner.zero_grad()
 
         return theta, pi
     
