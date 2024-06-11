@@ -2,6 +2,9 @@ import torch
 import numpy as np
 from torch import optim
 
+#from ..models.pyTG import sampleTG
+
+
 class NCE(torch.nn.Module):
 
     def __init__(self, num_epochs, p, M):
@@ -55,6 +58,14 @@ class NCE(torch.nn.Module):
         The estimated theta for the torus graph model and the constant c.
         
         """
+        numSamp = {'nodes':2, 'trials': 1000}
+        nodePairs = {'nodes' : np.array([[0,1]])}   
+        phi = np.block([ 0, 0, 0, 0, 8*np.cos(pi), 8*np.sin(pi), 0, 0 ])
+
+        data = sampleTG(numSamp, phi, nodePairs, selMode = (True, True, True),\
+             burnIn = 500, nThin = 100)
+        # returns nodes, trials, and observations
+
         self.M = 1 # For the TG model there is only one mixture component
         optimizer = optim.SGD([self.theta,self.c], lr=0.01)
 
@@ -66,7 +77,7 @@ class NCE(torch.nn.Module):
 
          
             # TODO: skal der tages cos og sin af datasamples og så ganges med theta som i en rigtig TG eller 
-            # er det allerede gjort når data_samples er genereret?
+            # er det allerede gjort når data_samples er genereret? Det er allerede gjort hvis sampleTG bruges.
 
             # To get the log_prop_data and log_prop_noise, the data has to go through the TG model.
             # TODO: Therefore I implemented the TG model below, but perhaps it could be replaced when the TG model is made.
@@ -83,9 +94,14 @@ class NCE(torch.nn.Module):
 
             for j,row in enumerate(noise_samples):
                 for k,value in enumerate(row):
-                    log_prop_data.append(1/self.c + [self.theta[0][j][k],self.theta[1][j][k]] * np.array([np.cos(value-diag), np.sin(value-diag)]))
+                    log_prop_noise.append(1/self.c + [self.theta[0][j][k],self.theta[1][j][k]] * np.array([np.cos(value-diag), np.sin(value-diag)]))
             
             
+            # log_prop_data = sampleTG[-1] ish
+
+            # TODO: noise data should go through TG model but not sampleTG
+
+        
             nce_loss = -np.mean(log_prop_data) + np.mean(log_prop_noise)
 
             nce_loss.backward() # Gradient of the loss
