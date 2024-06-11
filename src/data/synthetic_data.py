@@ -4,51 +4,11 @@
 ## And another script for sampling in Torus Graphs.
 
 ## Much of this code is slighty modified and refactored from https://github.com/josue-orellana/pyTG/blob/main/pyTG.py
+## All credit should go to them, yet they of course are not responsible for any mistakes
 
 import numpy as np
-
 from typing import List, Tuple, Any
-
-## ----------- ##
-## ---UTILS--- ##
-## ----------- ##
-
-def createNodePairs(nodes: int) -> np.ndarray[np.ndarray[int, int]]:
-    numNodePairs = int(nodes*(nodes-1)/2)
-    nodePairsNodes = np.zeros((numNodePairs, 2), dtype=int)
-    inc = 0
-    for i in range(nodes):
-        for j in range(i+1,nodes):
-            nodePairsNodes[inc,:] = [i, j]
-            inc +=1
-    return nodePairsNodes
-
-def drawVonMises(mu : float, kappa : float = 0.0, samples : int = 1) -> np.ndarray:
-    return np.random.vonmises(mu, kappa, size = samples)
-
-def samplePhi(
-    nNodePairs: int, 
-    fitFirstCircularMoments: bool, 
-    fitPairwiseAngleDifferences: bool, 
-    fitPairwiseAngleSums: bool
-) -> np.ndarray:
-    # size should be:
-    # 2 * number of nodePairs for each fitting method
-    return np.array([[0, 0, 0, 0], [8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0]])
-
-def harmonicAddition(amps, phases):
-    # inputs are numpy arrays
-    bx = sum(amps*np.cos(phases))
-    by = sum(amps*np.sin(phases))
-
-    resAmp = np.sqrt(bx**2 + by**2)
-    resPhase = np.arctan2(by, bx)
-
-    return (resAmp, resPhase)
-
-## -------------- ##
-## ---SAMPLING--- ##
-## -------------- ##
+from utils import createNodePairs, drawVonMises, samplePhi, harmonicAddition, phiToParamGroups, phiParamGroupsToMats
 
 def sampleFromTorusGraph(
     nodes   : int, 
@@ -60,7 +20,7 @@ def sampleFromTorusGraph(
     fitFCM: bool = True,    # FirstCircularMoments
     fitPAD: bool = True,    # PairwiseAngleDifferences
     fitPAS: bool = True,    # PairwiseAngleSums
-):
+) -> np.ndarray: # of size (nodes, samlpes)
     if nodePairs is None: nodePairs = createNodePairs(nodes)
     # some way of setting basic phi if not set preiously
     if phi is None: phi = samplePhi(len(nodePairs), fitFCM, fitPAD, fitPAS)
@@ -68,8 +28,9 @@ def sampleFromTorusGraph(
     params = len(phi)
     totalSamples = startBuffer + samples * sampleDistance
     x = drawVonMises(0, 0, nodes)
-    paramG = phiToParamGroups(phi, numSamp, selMode)
-    matParamG = phiParamGroupsToMats(numSamp, paramG, nodePairs)
+    paramG = phiToParamGroups(phi, params, nodes, nNodePairs, fitFCM, fitPAD, fitPAS)
+    matParamG = phiParamGroupsToMats(params, nodes, nodePairs, nNodePairs, paramG)
+    cosMu, sinMu = matParamG["cosMu"], matParamG["sinMu"]
     mu = np.angle(cosMu +sinMu*1j)
     kap = np.abs(cosMu + sinMu*1j)
     indsNodesAll = np.arange(nodes)
@@ -108,4 +69,14 @@ def sampleOutsideOfTorusGraph():
 if __name__ == "__main__":
     nodes = 4
     samples = 1000
-    sampleFromTorusGraph(nodes, samples)
+    output = sampleFromTorusGraph(
+        nodes, 
+        samples,
+        fitFCM = False,
+        fitPAD = True,
+        fitPAS = False
+    )
+    print("### OUTPUT ###")
+    print(f"You get a list of size ({nodes}, {samples}): {samples} samples for each of the {nodes} nodes")
+    print("\n--- ###### ---\n")
+    print(output)
