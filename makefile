@@ -4,3 +4,6 @@ install:
 
 test:
 	@echo 'testing...'
+
+syn:
+	python3 src/data/synthetic_data.py
