@@ -8,7 +8,7 @@
 
 import numpy as np
 from typing import List, Tuple, Any
-from utils import createNodePairs, drawVonMises, samplePhi, harmonicAddition, phiToParamGroups, phiParamGroupsToMats
+from data.utils import createNodePairs, drawVonMises, samplePhi, harmonicAddition, phiToParamGroups, phiParamGroupsToMats
 
 def sampleFromTorusGraph(
     nodes   : int, 
