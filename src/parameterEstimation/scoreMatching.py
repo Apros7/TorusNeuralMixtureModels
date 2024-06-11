@@ -218,25 +218,23 @@ class scoreMatching:
         # Estimating phiHat
         L = scipy.linalg.cholesky(gammaHatX + 1e-8 * np.eye(gammaHatX.shape[0]), lower=True)
         phiHat = scipy.linalg.cho_solve((L, True), HhatX)
-        #phiHat = np.linalg.inv(gammaHatX) @ HhatX # older version, less stable?
+
 
         # Estimating the covariance of phiHat: covPhiHat
         vHatX = np.zeros((num['param'],num['param']))
         for t in range(num['trials']):
             if cache_gammaXt:
-                #vVec = (gammaXt_trials[t, :, :] @ phiHat) - H[:,t]
+
                 vVec = np.dot(gammaXt_trials[t, :, :], phiHat) - Ht[t, :]
             else:
                 gammaXt = self.compGammaXt(t, num, selMode, nodePairs,
                                 sC, sS, sAlpha, sBeta, sGamma, sDelta)
-                #vVec = (gammaXt @ phiHat) - H[:,t]
+
                 vVec = np.dot(gammaXt, phiHat) - Ht[t, :]
-            #vVec = np.reshape(vVec,(-1,1))
-            #vHatX += vVec @ vVec.T
+
             vHatX += np.outer(vVec, vVec)
         vHatX /= num['trials']  
-        #invGammaHatX = np.linalg.inv(gammaHatX) # older version, less stable?
-        #covPhiHat = (invGammaHatX @ vHatX @ invGammaHatX)/num['trials']
+
         Linv = np.linalg.inv(L)
         covPhiHat = 1/num['trials'] * scipy.linalg.cho_solve((L, True), vHatX) @ Linv.T @ Linv
 
