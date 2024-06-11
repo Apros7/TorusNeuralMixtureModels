@@ -1,12 +1,13 @@
 from src.data.synthetic_data import sampleFromTorusGraph
+from src.parameterEstimation.NCE import NCE
+from src.parameterEstimation.scoreMatching import SM
 
 class TorusGraph():
-    def __init__(self, data, estimation_func): # estimation_func can be NCE or SM
+    def __init__(self, data, estimation_func: NCE or SM = NCE): # estimation_func can be NCE or SM
         self.data = data
-        self.estimate_params(estimation_func)
+        self.phi, self.buffer = self.estimate_params(estimation_func)
         self.nodes = 0
         self.nodePairs = 0
-        self.estimate_phi()
         
     def estimate_phi(self):
         self.phi, self.c = "hey", "hey"
