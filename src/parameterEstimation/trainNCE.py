@@ -48,7 +48,25 @@ if __name__=="__main__":
 
    import matplotlib.pyplot as plt
    plt.figure()
+   plt.subplot(1,3,1)
    plt.plot(objective)
+   plt.title(f"Objective function NCE with {model.K} models")
+   plt.xlabel("Iterations")
+   plt.ylabel("Loss")
+
+#    plt.subplot(1,3,2)
+#    plt.imshow(theta.detach().numpy()[0,:,:])
+#    plt.colorbar()
+#    plt.title("Theta")
+#    plt.xlabel("Dimension")
+#    plt.ylabel("Model")
+   
+#    plt.subplot(1,3,3)
+#    plt.plot(logc.detach().numpy())
+#    plt.title("Logc")
+#    plt.xlabel("Model")
+#    plt.ylabel("Logc")
+
    plt.savefig('tmp.png')
    print(theta,logc)
 
