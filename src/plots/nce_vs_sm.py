@@ -42,7 +42,7 @@ def plot_nce(X, nodes, K):
 
 def plot_sm(X, datamodel):
    phi, covPhi = SM(X, datamodel).compPhiHatAndCovPhiHat()
-   plt.imshow(phi)
+   plt.imshow(phi.reshape(2,3))
    plt.colorbar()
    plt.title("Theta, score matching")
    plt.xlabel("Dimension")
