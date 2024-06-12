@@ -54,7 +54,7 @@ class TorusGraphs(nn.Module):
        log_prob_noise = torch.logsumexp(log_prob_noise + self.logc,dim=0)
 
 
-       log_nx = torch.zeros(N) #needs to be implemented
+       log_nx = torch.zeros(N) #needs to be implemented, this is the noise samples
        log_ny = torch.zeros(N)
 
 
