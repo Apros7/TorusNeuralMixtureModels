@@ -2,8 +2,6 @@ import numpy as np
 import torch
 from tqdm import tqdm
 from NCE import TorusGraphs
-import os
-
 import sys
 sys.path.insert(0, '.')
 from src.data.synthetic_data import sampleFromTorusGraph
@@ -34,13 +32,11 @@ def mixture_torch_loop(X,noise,model):
 
 
 if __name__=="__main__":
-   N=1000 # samples
+   N=100 # samples
    p=3 # nodes
 
-
-   X = torch.tensor([0,0,0])+torch.rand(N,3)*0.1 # try with synthetic data
-   #X = sampleFromTorusGraph(p,N,fitFCM=False,fitPAD=True,fitPAS=False)
-
+   X = sampleFromTorusGraph(p,N,fitFCM=False,fitPAD=True,fitPAS=False)
+   X = torch.from_numpy(X).float().T
    noise = torch.rand(N,p)*2*torch.tensor(np.pi) # Noise distribution
 
 
@@ -53,26 +49,29 @@ if __name__=="__main__":
 
 
    import matplotlib.pyplot as plt
-   plt.figure()
-   plt.subplot(1,3,1)
+   plt.figure(figsize=(10,10))
+   plt.subplot(1,2,1)
    plt.plot(objective)
    plt.title(f"Objective function NCE with {model.K} models")
    plt.xlabel("Iterations")
    plt.ylabel("Loss")
-
-#    plt.subplot(1,3,2)
-#    plt.imshow(theta.detach().numpy()[0,:,:])
-#    plt.colorbar()
-#    plt.title("Theta")
-#    plt.xlabel("Dimension")
-#    plt.ylabel("Model")
    
-#    plt.subplot(1,3,3)
-#    plt.plot(logc.detach().numpy())
-#    plt.title("Logc")
-#    plt.xlabel("Model")
-#    plt.ylabel("Logc")
+   plt.subplot(1,2,2)
+   plt.imshow(theta.detach().numpy()[0,:,:])
+   plt.colorbar()
+   plt.title("Theta")
+   plt.xlabel("Dimension")
+   plt.ylabel("Model")
+   
+   # plt.subplot(1,3,3)
+   # plt.plot(logc.detach().numpy())
+   # plt.title("Logc")
+   # plt.xlabel("Model")
+   # plt.ylabel("Logc")
 
    plt.savefig('tmp.png')
    print(theta,logc)
 
+
+
+## lav sammenlign mellem 2 modeller med forskellige init_theta
