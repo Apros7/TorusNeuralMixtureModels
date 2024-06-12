@@ -25,6 +25,28 @@ class TorusGraphs(nn.Module):
 
 
    def NCE_objective_function(self,X,noise):
+       
+       """This function computes the NCE objective function for an arbitrary number of the Torus Graphs models.
+       Thus it works for mixture models as well.
+       Args:
+         X: torch.tensor of shape (N,nodes) where N is the number of samples and nodes is the number of nodes
+    noise: torch.tensor of shape (N,nodes) where N is the number of samples and nodes is the number of nodes
+
+         Returns:
+            J: torch.tensor of shape (K) where K is the number of models
+            If you do:  
+
+            model = TorusGraphs(nodes=X.shape[1],K=1)
+            model,objective = mixture_torch_loop(X,noise,model)
+
+            Then you can get theta and c by doing:
+            theta = model.theta
+            logc = model.logc
+
+    
+       
+    """
+
        # theta (Mx2xz)
        # x (Nxp)
        N = X.shape[0]
@@ -68,6 +90,8 @@ class TorusGraphs(nn.Module):
 
 
        J = torch.mean(torch.log(torch.tensor(N))+log_prob_data - log_J1_denom,dim=-1)+torch.mean(torch.log(torch.tensor(N))+log_ny - log_J2_denom,dim=-1)
+       # Cluster log_prob_data to K clusters
 
+    
 
        return J
