@@ -16,7 +16,7 @@ def mixture_torch_loop(X,noise,model):
     objective = []
 
 
-    for epoch in tqdm(range(2000)):
+    for epoch in tqdm(range(2000), desc="NCE training"):
             
         obj = -model.NCE_objective_function(X,noise) 
 
