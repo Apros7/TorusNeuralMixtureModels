@@ -8,55 +8,6 @@ class scoreMatching:
 
     # Sufficient Statistics
     def compSufStat(self, X, selMode, nodePairs):
-        """ Computes the sufficient statistics of the torus graph model.
-
-        The sufficient statistics are functions of the data X;
-        selMode determines the types of blocks that are included.  
-
-        Let
-
-        ``Xi = X[nodePairs['nodes'][:,0],:]``
-
-        ``Xj = X[nodePairs['nodes'][:,1],:]``
-
-        ``Xdif = Xi - Xj``
-
-        ``Xsum = Xi + Xj``
-
-        Args:
-            described in :meth:`funsTG.torusGraphs`.
-        
-        Outputs:
-            H : numpy array (num['param'], num['trials']).
-                H is the Laplacian, with respect to the data, of the suficient statistics. 
-                The sufficient statistics concatenate sC, sS, sAlpha, sBeta, sGamma, and sDelta.
-                After taking the laplacian (second derivative and sum), H is equal to concatenating  
-                sC, sS, 2*sAlpha, 2*sBeta, 2*sGamma, 2*sDelta.
-                However, whether these blocks are included depends on selMode.
-
-            sC : cos(X)
-
-            sS : sin(X)
-
-            sAlpha : cos(Xdif)
-
-            sBeta : sin(Xdif)
-
-            sGamma : cos(Xsum)
-
-            sDelta = sin(Xsum)
-
-        >>> selMode = (True, True, True) 
-        >>> nodePairs = {'nodes': np.array([ [0,1], [0,2], [1,2] ]) }
-        >>> X = np.array([[0, pi], [pi, pi/2], [pi/2, pi/3] ]) # 3 nodes, 2 trials
-        >>> Xi = X[nodePairs['nodes'][:,0],:]
-        >>> Xj = X[nodePairs['nodes'][:,1],:]
-        >>> H, sC, sS, sAlpha, sBeta, sGamma, sDelta = compSufStat(X, selMode, nodePairs)
-        >>> h = np.concatenate((np.cos(X), np.sin(X), 2*np.cos(Xi-Xj), 2*np.sin(Xi-Xj), 2*np.cos(Xi+Xj), 2*np.sin(Xi+Xj) ), axis = 0)
-        >>> np.all(abs(H - h) < 1e-12)
-        True
-
-        """
 
         # Sufficient Statistics
         Xi = X[nodePairs['nodes'][:,0],:]
@@ -104,29 +55,7 @@ class scoreMatching:
     #Gamma (Jacobian of the sufficient statistics )
     def compGammaXt(self, t, num, selMode, nodePairs, 
                     sC, sS, sAlpha, sBeta, sGamma, sDelta ):
-        """ Computes a function Gamma for a single trial from X. 
 
-        Let Dt (num['param'], num[''nodes]) be the Jacobian of the suficient statistics; 
-        by Jacobian we mean the first derivative with respect to the data, then
-
-        ``gammaXt = Dt @ Dt.T # np.matmul(Dt,Dt.T)``
-
-        Args:
-            described in :meth:`funsTG.torusGraphs` and :meth:`funsTG.compSufStat`.
-        
-        Outputs:
-            gammaXt : numpy array (num['param'], num['param']).
-
-        >>> X = np.array([ [-2.1,-1.4,2,2.8,-0.7,-2], [1.3,-2.9,1.2,-2.9,1.7,-0.1], [-2.9,-2.5,-1.1,-0.4,1.9,-0.3] ])
-        >>> selMode = (True, True, True)
-        >>> num = {'nodes': 3, 'trials': 6, 'nodePairs': 3, 'param': 18}
-        >>> nodePairs = {'nodes': np.array([ [0,1], [0,2], [1,2] ])}
-        >>> H, sC, sS, sAlpha, sBeta, sGamma, sDelta = compSufStat(X, selMode, nodePairs)
-        >>> gammaXt = compGammaXt(1, num, selMode, nodePairs, sC, sS, sAlpha, sBeta, sGamma, sDelta)
-        >>> sum(gammaXt.flatten())
-        15.5466459624921
-
-        """
         # define gammaXt (t-th trial)
         Dt = [] # Jacobian of the suficient statistics
 
@@ -165,33 +94,7 @@ class scoreMatching:
 
     #Phi hat and Covariance of Phi hat
     def compPhiHatAndCovPhiHat(self, X, num, selMode, nodePairs):
-        """ Computes the parameter estimates and their covariance. 
-        
-        Args:
-            described in :meth:`funsTG.torusGraphs`.
-        
-        Outputs: 
-            phiHat : numpy array with num['param'] elements.
-                Model parameters estimates.
-            
-            covPhiHat : numpy matrix (num['param'], num['param']) 
-                Covariance for the model parameter estimates.
 
-        >>> X = np.array([ [-2.1,-1.4,2,2.8,-0.7,-2], [1.3,-2.9,1.2,-2.9,1.7,-0.1], [-2.9,-2.5,-1.1,-0.4,1.9,-0.3] ])
-        >>> selMode = (True, True, True)
-        >>> num = {'nodes': 3, 'trials': 6, 'nodePairs': 3, 'param': 18}
-        >>> nodePairs = {'nodes': np.array([ [0,1], [0,2], [1,2] ])}
-        >>> phiHat, covPhiHat = compPhiHatAndCovPhiHat(X, num, selMode, nodePairs)
-        >>> phiHat
-        array([-39.14836993,   7.87810064,  39.42105888, -16.63875025,
-                64.03174047, -47.82433269,  25.35498747, -31.41571978,
-                58.81343556, -50.01232377,  -5.12549116,  11.0160441 ,
-            -18.56673785,  -1.31352256,  16.1610135 , -23.23622016,
-            -31.69057573, -34.39433503])
-        >>> sum(covPhiHat.flatten())
-        23556.69806086992
-
-        """
         # Sufficient Statistics
         H, sC, sS, sAlpha, sBeta, sGamma, sDelta = \
             self.compSufStat(X, selMode, nodePairs)
