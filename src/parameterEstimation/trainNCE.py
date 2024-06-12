@@ -35,8 +35,6 @@ if __name__=="__main__":
    N=100 # samples
    p=3 # nodes
 
-
-   #X = torch.tensor([0,0,0])+torch.rand(N,3)*0.1 
    X = sampleFromTorusGraph(p,N,fitFCM=False,fitPAD=True,fitPAS=False)
    X = torch.from_numpy(X).float().T
    noise = torch.rand(N,p)*2*torch.tensor(np.pi) # Noise distribution
