@@ -1,10 +1,11 @@
 import numpy as np
 import torch
 from tqdm import tqdm
-from NCE import TorusGraphs
+
 import sys
 sys.path.insert(0, '.')
 from src.data.synthetic_data import sampleFromTorusGraph
+from src.parameterEstimation.NCE import TorusGraphs
 
 
 
@@ -33,14 +34,14 @@ def mixture_torch_loop(X,noise,model):
 
 if __name__=="__main__":
    N=100 # samples
-   p=3 # nodes
+   nodes=3 
 
-   X = sampleFromTorusGraph(p,N,fitFCM=False,fitPAD=True,fitPAS=False)
+   X = sampleFromTorusGraph(nodes,N,fitFCM=False,fitPAD=True,fitPAS=False)
    X = torch.from_numpy(X).float().T
-   noise = torch.rand(N,p)*2*torch.tensor(np.pi) # Noise distribution
+   noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution
 
 
-   model = TorusGraphs(p=X.shape[1],K=1)
+   model = TorusGraphs(nodes=X.shape[1],K=1)
    model,objective = mixture_torch_loop(X,noise,model)
 
 
@@ -69,8 +70,8 @@ if __name__=="__main__":
    # plt.xlabel("Model")
    # plt.ylabel("Logc")
 
-   plt.savefig('tmp.png')
-   print(theta,logc)
+   # plt.savefig('tmp.png')
+   # print(theta,logc)
 
 
 

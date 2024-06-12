@@ -4,19 +4,24 @@ import torch.nn as nn
 
 
 class TorusGraphs(nn.Module):
-   def __init__(self, p:int, K:int):
+   def __init__(self, nodes:int, K:int):
+       '''
+       nodes: number of nodes
+       K: number of models (or components) 
+       
+       '''
        super().__init__()
 
 
        self.K = K
-       self.p = p
-       z = p*(p-1)//2
+       self.nodes = nodes
+       z = nodes*(nodes-1)//2
        self.K = 1
        self.theta = nn.Parameter(torch.randn(self.K,2,z))
        self.logc = nn.Parameter(torch.zeros(self.K))
 
 
-       self.triu_indices = torch.triu_indices(p,p,offset=1)
+       self.triu_indices = torch.triu_indices(nodes,nodes,offset=1)
 
 
    def NCE_objective_function(self,X,noise):
@@ -41,7 +46,7 @@ class TorusGraphs(nn.Module):
     #                log_prob_noise[k,i] += self.theta[k,:,z]@torch.tensor([cosn,sinn])
        
 
-       for z in range(self.p*(self.p-1)//2):
+       for z in range(self.nodes*(self.nodes-1)//2):
            cosx = torch.cos(X[:,self.triu_indices[0,z]] - X[:,self.triu_indices[1,z]])
            sinx = torch.sin(X[:,self.triu_indices[0,z]] - X[:,self.triu_indices[1,z]])
            log_prob_data = self.theta[:,:,z]@torch.stack([cosx,sinx],dim=0)
@@ -55,7 +60,7 @@ class TorusGraphs(nn.Module):
 
 
        log_nx = torch.zeros(N) #needs to be implemented, this is the noise samples
-       log_ny = torch.zeros(N)
+       log_ny = torch.zeros(N) # maybe just noise
 
 
        log_J1_denom = torch.logsumexp(torch.stack([torch.log(torch.tensor(N))+log_prob_data,torch.log(torch.tensor(M))+log_nx],dim=-1), dim=-1)
