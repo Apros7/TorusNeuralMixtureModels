@@ -9,7 +9,7 @@ from src.parameterEstimation.trainNCE import mixture_torch_loop
 from src.parameterEstimation.NCE import TorusGraphs
 from src.data.synthetic_data import sampleFromTorusGraph
 
-N = 1000 # samples
+N = 100 # samples
 nodes = 3
 K = 2 # number of models (or components)
 phi1 = np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ]) 
