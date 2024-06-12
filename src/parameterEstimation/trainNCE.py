@@ -2,6 +2,12 @@ import numpy as np
 import torch
 from tqdm import tqdm
 from NCE import TorusGraphs
+import os
+
+import sys
+sys.path.insert(0, '.')
+from src.data.synthetic_data import sampleFromTorusGraph
+
 
 
 def mixture_torch_loop(X,noise,model):
@@ -28,14 +34,14 @@ def mixture_torch_loop(X,noise,model):
 
 
 if __name__=="__main__":
-   N=1000
-   p=3
+   N=1000 # samples
+   p=3 # nodes
 
 
-   X = torch.tensor([0,0,0])+torch.rand(N,3)*0.1
+   X = torch.tensor([0,0,0])+torch.rand(N,3)*0.1 # try with synthetic data
+   #X = sampleFromTorusGraph(p,N,fitFCM=False,fitPAD=True,fitPAS=False)
 
-
-   noise = torch.rand(N,p)*2*torch.tensor(np.pi)
+   noise = torch.rand(N,p)*2*torch.tensor(np.pi) # Noise distribution
 
 
    model = TorusGraphs(p=X.shape[1],K=1)
