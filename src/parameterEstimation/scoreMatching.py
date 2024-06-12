@@ -1,10 +1,27 @@
 import numpy as np
 import scipy.linalg
 
+#X = np.array([ [-2.1,-1.4,2,2.8,-0.7,-2], [1.3,-2.9,1.2,-2.9,1.7,-0.1], [-2.9,-2.5,-1.1,-0.4,1.9,-0.3] ])
+#selMode = (True, True, True)
+#num = {'nodes': 3, 'trials': 6, 'nodePairs': 3, 'param': 18}
+#nodePairs = {'nodes': np.array([ [0,1], [0,2], [1,2] ])}
 
-class scoreMatching:
-    def __init__(self):
-        pass
+class SM():
+    def __init__(self, X, t, num, selMode, nodePairs, 
+                    sC, sS, sAlpha, sBeta, sGamma, sDelta ):
+        super(SM, self).__init__()
+        self.X = X
+        self.t = t
+        self.num = num
+        self.selMode = selMode
+        self.nodePairs = nodePairs
+        self.sC = sC
+        self.sS = sS
+        self.sAlpha = sAlpha
+        self.sBeta = sBeta
+        self.sGamma = sGamma
+        self.sDelta = sDelta
+        
 
     # Sufficient Statistics
     def compSufStat(self, X, selMode, nodePairs):
@@ -43,8 +60,6 @@ class scoreMatching:
             sDelta = None
 
         H = np.array(H)
-
-        print("H", H, "sC", sC, "sS", sS, "sAlpha", sAlpha, "sBeta", sBeta, "sGamma", sGamma, "sDelta", sDelta)
 
         return (H, sC, sS, sAlpha, sBeta, sGamma, sDelta)
 
