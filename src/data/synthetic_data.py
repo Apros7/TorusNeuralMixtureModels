@@ -8,12 +8,25 @@
 
 import numpy as np
 from typing import List, Tuple, Any
+from tqdm import tqdm
 
 import sys
 sys.path.insert(0, '.')
 
-
 from src.data.utils import createNodePairs, drawVonMises, samplePhi, harmonicAddition, phiToParamGroups, phiParamGroupsToMats
+from dataclasses import dataclass
+
+@dataclass
+class TorusGraphInformation:
+    samples: int # trials
+    nodes: int
+    nodePairs: np.ndarray[np.ndarray[int, int]]
+    nNodePairs: int
+    params: int
+    fitFCM: bool    # FirstCircularMoments
+    fitPAD: bool    # PairwiseAngleDifferences
+    fitPAS: bool    # PairwiseAngleSums
+
 
 def sampleFromTorusGraph(
     nodes   : int, 
@@ -25,7 +38,9 @@ def sampleFromTorusGraph(
     fitFCM: bool = True,    # FirstCircularMoments
     fitPAD: bool = True,    # PairwiseAngleDifferences
     fitPAS: bool = True,    # PairwiseAngleSums
+    return_datamodel:  bool = False
 ) -> np.ndarray: # of size (nodes, samlpes)
+
     if nodePairs is None: nodePairs = createNodePairs(nodes)
     # some way of setting basic phi if not set preiously
     if phi is None: phi = samplePhi(len(nodePairs), fitFCM, fitPAD, fitPAS)
@@ -43,7 +58,7 @@ def sampleFromTorusGraph(
     iKeep = 0
 
     S = np.zeros((nodes, samples))
-    for i in range(totalSamples):
+    for i in tqdm(range(totalSamples), "Sampling data..."):
         for k in range(nodes):
             smDelta = np.concatenate(( x[:k]     - np.pi/2, 
                                        x[(k+1):] + np.pi/2 ))
@@ -65,6 +80,18 @@ def sampleFromTorusGraph(
         if (i in indsSampKeep): 
             S[:,iKeep]=x
             iKeep += 1
+    if return_datamodel:
+        datamodel = TorusGraphInformation(
+                samples = samples,
+                nodes = nodes,
+                nodePairs = nodePairs,
+                nNodePairs = nNodePairs,
+                params = params,
+                fitFCM = fitFCM,
+                fitPAD = fitPAD,
+                fitPAS = fitPAS
+        )
+        return S, datamodel
     return S
 
 def sampleOutsideOfTorusGraph():
