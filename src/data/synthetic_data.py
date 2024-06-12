@@ -12,7 +12,8 @@ from typing import List, Tuple, Any
 import sys
 sys.path.insert(0, '.')
 
-from utils import createNodePairs, drawVonMises, samplePhi, harmonicAddition, phiToParamGroups, phiParamGroupsToMats
+
+from src.data.utils import createNodePairs, drawVonMises, samplePhi, harmonicAddition, phiToParamGroups, phiParamGroupsToMats
 
 def sampleFromTorusGraph(
     nodes   : int, 
