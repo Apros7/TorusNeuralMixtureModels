@@ -90,7 +90,6 @@ class TorusGraphs(nn.Module):
 
 
        J = torch.mean(torch.log(torch.tensor(N))+log_prob_data - log_J1_denom,dim=-1)+torch.mean(torch.log(torch.tensor(N))+log_ny - log_J2_denom,dim=-1)
-       # Cluster log_prob_data to K clusters
 
     
 
