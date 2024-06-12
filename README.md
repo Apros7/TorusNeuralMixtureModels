@@ -17,9 +17,25 @@ make test
 ```
 
 ## Reproduce results
+You can reproduce a single run of our NCE & SM parameter estimation results on a Torus Graph from synthetic data by running
 ```
-Reproduce
+make tg_est_single
 ```
+or use cross validation
+```
+make tg_est_cv
+```
+
+You can also see our results of a mixture model from synthetic data:
+```
+make mixture_syn_data
+```
+
+or from real data:
+```
+make mixture_real_data
+```
+
 
 ## Conclusions
 Conclusion
@@ -35,3 +51,13 @@ Conclusion
     url      = {https://api.semanticscholar.org/CorpusID:263608461}
 }
 ```
+
+Need 
+- [ ] Fix NCE
+- [ ] Visualize NCE results
+- [ ] SM
+- [ ] Visualize SM results
+- [ ] Evaluation
+- [ ] 
+
+Marginal uniform første led gå rud
