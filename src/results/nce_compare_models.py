@@ -41,10 +41,17 @@ X = torch.cat([X1,X2],dim=0)
 noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution, mellem 0 og 2*pi
 
 
-model1 = TorusGraphs(nodes=X1.shape[1],K=1,return_log_prop_data=True)
-model1,objective1, log_prob_data1 = mixture_torch_loop(X1,noise,model1)
-theta1,c1 = model1.theta,model1.logc
+# model1 = TorusGraphs(nodes=X1.shape[1],K=1,return_log_prop_data=True)
+# model1,objective1, log_prob_data1 = mixture_torch_loop(X1,noise,model1)
+# theta1,c1 = model1.theta,model1.logc
 
-model2 = TorusGraphs(nodes=X2.shape[1],K=1,return_log_prop_data=True)
+# model2 = TorusGraphs(nodes=X2.shape[1],K=1,return_log_prop_data=True)
+# model2,objective2, log_prob_data2 = mixture_torch_loop(X2,noise,model2)
+# theta2,c2 = model2.theta,model2.logc
+
+
+# Classify the log_prop_data
+model2 = TorusGraphs(nodes=X1.shape[1],K=2,return_log_prop_data=True)
 model2,objective2, log_prob_data2 = mixture_torch_loop(X2,noise,model2)
 theta2,c2 = model2.theta,model2.logc
+print(theta2)

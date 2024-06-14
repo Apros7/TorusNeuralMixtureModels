@@ -16,7 +16,6 @@ class TorusGraphs(nn.Module):
         self.K = K
         self.nodes = nodes
         z = nodes*(nodes-1)//2
-        self.K = 1
         self.theta = nn.Parameter(torch.randn(self.K,2,z))
         self.logc = nn.Parameter(torch.zeros(self.K))
         self.return_log_prop_data = return_log_prop_data
@@ -78,8 +77,8 @@ class TorusGraphs(nn.Module):
             cosn = torch.cos(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])
             sinn = torch.sin(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])
             log_prob_noise = self.theta[:,:,z]@torch.stack([cosn,sinn],dim=0)
-        log_prob_data = torch.logsumexp(log_prob_data + self.logc,dim=0)
-        log_prob_noise = torch.logsumexp(log_prob_noise + self.logc,dim=0)
+        log_prob_data = torch.logsumexp(log_prob_data + self.logc.view(-1,1),dim=0)
+        log_prob_noise = torch.logsumexp(log_prob_noise + self.logc.view(-1,1),dim=0)
 
 
         log_nx = torch.zeros(N) #needs to be implemented, this is the noise samples
