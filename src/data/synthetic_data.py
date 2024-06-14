@@ -77,7 +77,9 @@ def sampleFromTorusGraph(
     indsSampKeep = list(range(startBuffer,totalSamples,sampleDistance))
     iKeep = 0
 
-    S = np.zeros((nodes, samples))
+    x1 = x.copy()
+    x2 = x.copy()
+    S1 = np.zeros((nodes, samples))
     for i in tqdm(range(totalSamples), "Sampling data..."):
         if i not in indsSampKeep:
             continue
@@ -98,9 +100,40 @@ def sampleFromTorusGraph(
                                     -x[indsNoK],
                                     -x[indsNoK] + np.pi/2 ))                                                    
             resAmp, resPhase = harmonicAddition(amps, phases)
-            x[k] = np.random.vonmises(resPhase, resAmp, 1)
-        S[:,iKeep]=x
+            x1[k] = np.random.vonmises(resPhase, resAmp, 1)
+        S1[:,iKeep]=x1
         iKeep += 1
+
+    S2 = np.zeros((nodes, samples))
+    iKeep = 0
+
+    for i in tqdm(range(totalSamples), "Sampling data..."):
+        for k in range(nodes):
+            smDelta = np.concatenate(( x[:k]     - np.pi/2, 
+                                       x[(k+1):] + np.pi/2 ))
+
+            indsNoK = np.concatenate(( indsNodesAll[:k], indsNodesAll[(k+1):] ))
+
+            amps = np.concatenate(( kap[k:(k+1)], 
+                                    matParamG['cosMuDif'][k,indsNoK],
+                                    matParamG['sinMuDif'][k,indsNoK],
+                                    matParamG['cosMuSum'][k,indsNoK],
+                                    matParamG['cosMuSum'][k,indsNoK] )) 
+            phases = np.concatenate(( mu[k:(k+1)],
+                                    x[indsNoK],
+                                    smDelta,
+                                    -x[indsNoK],
+                                    -x[indsNoK] + np.pi/2 ))                                                    
+            resAmp, resPhase = harmonicAddition(amps, phases)
+            x2[k] = np.random.vonmises(resPhase, resAmp, 1)
+        if (i in indsSampKeep): 
+            S2[:,iKeep]=x2
+            iKeep += 1
+
+    print(S1)
+    print(S2)
+
+    assert np.array_equal(S1, S2)
     if return_datamodel:
         datamodel = TorusGraphInformation(
                 samples = samples,
@@ -112,8 +145,8 @@ def sampleFromTorusGraph(
                 fitPAD = fitPAD,
                 fitPAS = fitPAS
         )
-        return S, datamodel
-    return S
+        return S1, datamodel
+    return S1
 
 def sampleOutsideOfTorusGraph():
     drawVonMises()
@@ -121,7 +154,7 @@ def sampleOutsideOfTorusGraph():
 
 if __name__ == "__main__":
     nodes = 4
-    samples = 1000
+    samples = 10
     output = sampleFromTorusGraph(
         nodes, 
         samples,
