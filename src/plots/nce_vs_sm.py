@@ -45,7 +45,7 @@ def plot_nce_vs_sm(X,nodes, K,datamodel):
    plt.title(f"Objective function NCE with {model.K} models")
    plt.xlabel("Iterations")
    plt.ylabel("Loss")
-   plt.savefig('plot_objective_nce.png')
+   plt.savefig('src/plots/plot_objective_nce.png')
 
 
 
