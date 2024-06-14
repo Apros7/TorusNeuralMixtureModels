@@ -17,9 +17,11 @@ def mixture_torch_loop(X,noise,model):
 
 
     for epoch in tqdm(range(2000), desc="NCE training"):
-            
-        obj, log_prop_data = model.NCE_objective_function(X,noise)
-        obj = -obj
+        if model.return_log_prop_data:    
+            obj, log_prop_data = model.NCE_objective_function(X,noise)
+            obj = -obj
+        else:
+            obj = -model.NCE_objective_function(X,noise)
 
 
         if torch.isnan(-obj):
