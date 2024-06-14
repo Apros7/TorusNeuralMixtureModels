@@ -41,6 +41,26 @@ def sampleFromTorusGraph(
     return_datamodel:  bool = False
 ) -> np.ndarray: # of size (nodes, samlpes)
 
+    """
+    Samples from a torus graph.
+
+    Parameters:
+    nodes (int): The number of nodes in the graph.
+    samples (int): The number of samples to generate.
+    phi (np.ndarray): The initial phase angles.
+    node_pairs (List[Tuple[int, int]]): The pairs of nodes in the graph.
+    start_buffer (int): The number of initial samples to generate.
+    sample_distance (int): The distance between samples.
+    fit_fcm (bool): Whether to fit the first circular moments.
+    fit_pad (bool): Whether to fit the pairwise angle differences.
+    fit_pas (bool): Whether to fit the pairwise angle sums.
+    return_datamodel (bool): Whether to return the data model.
+
+    Returns:
+    np.ndarray: The generated samples.
+    Optional[TorusGraphInformation]: The data model.
+    """
+
     if nodePairs is None: nodePairs = createNodePairs(nodes)
     # some way of setting basic phi if not set preiously
     if phi is None: phi = samplePhi(len(nodePairs), fitFCM, fitPAD, fitPAS)
@@ -59,6 +79,8 @@ def sampleFromTorusGraph(
 
     S = np.zeros((nodes, samples))
     for i in tqdm(range(totalSamples), "Sampling data..."):
+        if i not in indsSampKeep:
+            continue
         for k in range(nodes):
             smDelta = np.concatenate(( x[:k]     - np.pi/2, 
                                        x[(k+1):] + np.pi/2 ))
@@ -77,9 +99,8 @@ def sampleFromTorusGraph(
                                     -x[indsNoK] + np.pi/2 ))                                                    
             resAmp, resPhase = harmonicAddition(amps, phases)
             x[k] = np.random.vonmises(resPhase, resAmp, 1)
-        if (i in indsSampKeep): 
-            S[:,iKeep]=x
-            iKeep += 1
+        S[:,iKeep]=x
+        iKeep += 1
     if return_datamodel:
         datamodel = TorusGraphInformation(
                 samples = samples,
