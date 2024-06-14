@@ -1,6 +1,7 @@
 # Do NCE with two different init of theta
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 import torch
 import sys
 sys.path.insert(0, '.')
@@ -8,6 +9,7 @@ sys.path.insert(0, '.')
 from src.parameterEstimation.trainNCE import mixture_torch_loop
 from src.parameterEstimation.NCE import TorusGraphs
 from src.data.synthetic_data import sampleFromTorusGraph
+from src.results.NMI import calc_NMI, calc_MI
 
 N = 200 # samples
 nodes = 3
@@ -56,8 +58,7 @@ theta,c = model.theta,model.logc
 print(log_prob_data.shape) # (K,N)
 log_prob_data = torch.tensor(log_prob_data)
 
-# z : prob of point x belonging to model k
-# z = torch.exp(log_prop_data_1 + logc)/torch.sum(torch.exp(log_prop_data + logc),dim=0)
+
 def compute_log_probs(self, log_prob_data, c):
     denominator = torch.sum(torch.exp(log_prob_data + self.logc.view(-1,1)), dim=0)
     z = torch.zeros(self.K, N)
@@ -75,6 +76,38 @@ def classify_points(model, X, log_prob_data, c):
 
 label = classify_points(model, X, log_prob_data, c)
 # plot label dsitrubtion of the data
-plt.figure(figsize=(14,10))
-plt.scatter(range(N), label)
+ones = torch.sum(label == 1).item()
+wrong_ones = abs(N/2 - ones)
+zeros = torch.sum(label == 0).item()
+wrong_zeros = wrong_ones
+
+# Confusion matrix
+confusion_matrix = torch.zeros(2,2)
+confusion_matrix[0,0] = ones
+confusion_matrix[0,1] = wrong_zeros
+confusion_matrix[1,0] = wrong_ones
+confusion_matrix[1,1] = zeros
+
+# plot 
+sns.heatmap(confusion_matrix, annot=confusion_matrix, annot_kws={"size": 8})
+plt.title("Mixture model NCE with two components, class label distribution")
 plt.show()
+plt.savefig("src/plots/mix_nce.png")
+
+# NMI: Normalized Mutual Information
+z = compute_log_probs(model, log_prob_data, c)
+z1,z2 = torch.tensor_split(z,2,dim=1)
+z1 = z1.detach().numpy()
+z2 = z2.detach().numpy()
+
+MI = calc_MI(z1,z2)
+NMI = calc_NMI(z1,z2)
+
+# Plot boxplot of NMI and MI
+col1 = [NMI,0]
+col2 = [MI,0]
+plt.boxplot([col1,col2])
+plt.xticks([1,2],["NMI","MI"])
+plt.title("NMI and MI for two components")
+plt.show()
+plt.savefig("src/plots/NMI.png")
