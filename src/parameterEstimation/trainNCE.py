@@ -16,7 +16,6 @@ def mixture_torch_loop(X,noise,model, lr=0.1):
     optimizer = torch.optim.Adam(model.parameters(),lr=lr)
     objective = []
 
-
     for epoch in tqdm(range(10000), desc="NCE training", disable=os.environ.get("DISABLE_TQDM", False)):
         if model.return_log_prop_data:    
             obj, log_prop_data = model.NCE_objective_function(X,noise)
