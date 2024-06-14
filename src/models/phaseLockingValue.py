@@ -40,7 +40,7 @@ def phaseLockingValue(X, nodePairs = None):
     plv = np.abs(np.mean(np.exp(1j*(Xdif)), axis =1))
     pVals, z = rayleigh(Xdif)
 
-    return (plv, pVals) #hva er pVals???
+    return (plv, pVals)
     
 X = sampleFromTorusGraph(3, 100, fitFCM = False, fitPAD = True, fitPAS = False)
 print(phaseLockingValue(X))
@@ -52,29 +52,18 @@ plv, pVals = phaseLockingValue(X)
 plt.figure(figsize=(10, 5))
 
 # Plot PLV
-plt.subplot(1, 2, 1)
+# plt.subplot(1, 2, 1)
 plt.bar(range(len(plv)), plv, color='b')
 plt.xlabel('Node Pairs')
 plt.ylabel('Phase Locking Value (PLV)')
 plt.title('Phase Locking Value (PLV) for Node Pairs')
 
 # Plot p-values
-plt.subplot(1, 2, 2)
-plt.bar(range(len(pVals)), pVals, color='r')
-plt.xlabel('Node Pairs')
-plt.ylabel('p-value')
-plt.title('p-values for Node Pairs')
+# plt.subplot(1, 2, 2)
+# plt.bar(range(len(pVals)), pVals, color='r')
+# plt.xlabel('Node Pairs')
+# plt.ylabel('p-value')
+# plt.title('p-values for Node Pairs')
 
-plt.tight_layout()
-plt.show()
-
-plv_values, p_values = phaseLockingValue(X)
-
-# Plotting
-plt.figure(figsize=(10, 5))
-plt.bar(range(len(plv_values)), plv_values, color='skyblue')
-plt.xlabel('Node Pair Index')
-plt.ylabel('Phase Locking Value (PLV)')
-plt.title('Phase Locking Values between Node Pairs in Torus Graph')
-plt.grid(True)
+# plt.tight_layout()
 plt.show()
