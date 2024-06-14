@@ -23,11 +23,11 @@ X1, datamodel = sampleFromTorusGraph(
         return_datamodel = True
     )
 X1 = torch.from_numpy(X1).float().T
-phi2 = np.block([ -1*np.cos(np.pi), 0, 0, 0, 0, -1*np.sin(np.pi) ]) 
+phi2 = np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ]) 
 X2, datamodel = sampleFromTorusGraph(
         nodes = nodes,
         samples = N,
-        phi = phi1,
+        phi = phi2,
         fitFCM = False,
         fitPAD = True,
         fitPAS = False,
