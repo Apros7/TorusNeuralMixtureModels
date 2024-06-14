@@ -18,7 +18,8 @@ def mixture_torch_loop(X,noise,model):
 
     for epoch in tqdm(range(2000), desc="NCE training"):
             
-        obj = -model.NCE_objective_function(X,noise) 
+        obj, log_prop_data = model.NCE_objective_function(X,noise)
+        obj = -obj
 
 
         if torch.isnan(-obj):
@@ -29,6 +30,8 @@ def mixture_torch_loop(X,noise,model):
         optimizer.step()
         objective.append(-obj.item())
             
+    if model.return_log_prop_data:
+        return model,objective,log_prop_data
     return model,objective
 
 
