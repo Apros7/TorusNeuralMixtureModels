@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from tqdm import tqdm
+import os
 
 import sys
 sys.path.insert(0, '.')
@@ -9,14 +10,13 @@ from src.parameterEstimation.NCE import TorusGraphs
 
 
 
-def mixture_torch_loop(X,noise,model):
+def mixture_torch_loop(X,noise,model, lr=0.1):
 
 
-    optimizer = torch.optim.Adam(model.parameters(),lr=0.4)
+    optimizer = torch.optim.Adam(model.parameters(),lr=lr)
     objective = []
 
-
-    for epoch in tqdm(range(2000), desc="NCE training"):
+    for epoch in tqdm(range(10000), desc="NCE training", disable=os.environ.get("DISABLE_TQDM", False)):
         if model.return_log_prop_data:    
             obj, log_prop_data = model.NCE_objective_function(X,noise)
             obj = -obj
@@ -55,19 +55,21 @@ if __name__=="__main__":
 
 
    import matplotlib.pyplot as plt
-   plt.figure(figsize=(10,10))
-   plt.subplot(1,2,1)
+   plt.figure(figsize=(10,6))
+#    plt.subplot(1,2,1)
    plt.plot(objective)
    plt.title(f"Objective function NCE with {model.K} models")
    plt.xlabel("Iterations")
    plt.ylabel("Loss")
    
-   plt.subplot(1,2,2)
-   plt.imshow(theta.detach().numpy()[0,:,:])
-   plt.colorbar()
-   plt.title("Theta")
-   plt.xlabel("Dimension")
-   plt.ylabel("Model")
+#    plt.subplot(1,2,2)
+#    plt.imshow(theta.detach().numpy()[0,:,:])
+#    plt.colorbar()
+#    plt.title("Theta")
+#    plt.xlabel("Dimension")
+#    plt.ylabel("Model")
+
+   plt.show()
    
    # plt.subplot(1,3,3)
    # plt.plot(logc.detach().numpy())
