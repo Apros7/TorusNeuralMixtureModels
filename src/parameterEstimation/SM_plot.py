@@ -36,7 +36,7 @@ pos = axs[0].imshow(Phi_cos)
 fig.colorbar(pos, ax=axs[0])
 pos = axs[1].imshow(Phi_sin)
 fig.colorbar(pos, ax=axs[1])
-plt.savefig('torus_test.png')
+plt.savefig('plot_sm.png')
 
 a=7
 
