@@ -104,9 +104,7 @@ MI = calc_MI(z1,z2)
 NMI = calc_NMI(z1,z2)
 
 # Plot boxplot of NMI and MI
-col1 = [NMI,0]
-col2 = [MI,0]
-plt.boxplot([col1,col2])
+plt.boxplot([[NMI,0],[MI,0]])
 plt.xticks([1,2],["NMI","MI"])
 plt.title("NMI and MI for two components")
 plt.show()
