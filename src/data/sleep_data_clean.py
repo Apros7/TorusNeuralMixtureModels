@@ -9,6 +9,6 @@ import sys
 sys.path.insert(0,'.')
 
 
-# første element i phases indeholderne målingerne for første element i stages.
+# første element i phases indeholderne målingerne for første element i stages
 
 
