@@ -54,4 +54,4 @@ noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution, mellem 0
 model2 = TorusGraphs(nodes=X1.shape[1],K=2,return_log_prop_data=True)
 model2,objective2, log_prob_data2 = mixture_torch_loop(X2,noise,model2)
 theta2,c2 = model2.theta,model2.logc
-print(log_prob_data2.shape)
+print(log_prob_data2.shape) # (K,N)
