@@ -38,7 +38,7 @@ X2 = torch.from_numpy(X2).float().T
 X = torch.cat([X1,X2],dim=0)
 
 
-noise = torch.rand(N*2,nodes)*2*torch.tensor(np.pi) # Noise distribution
+noise = torch.rand(N*2,nodes)*2*torch.tensor(np.pi) # Noise distribution, mellem 0 og 2*pi
 
 
 models = TorusGraphs(nodes=X.shape[1],K=2)
