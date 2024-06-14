@@ -67,3 +67,4 @@ plt.title('Phase Locking Value (PLV) for Node Pairs')
 
 # plt.tight_layout()
 plt.show()
+plt.savefig('plot_plv.png')
