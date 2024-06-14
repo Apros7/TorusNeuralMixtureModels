@@ -10,6 +10,11 @@ from src.parameterEstimation.NCE import TorusGraphs
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
+import concurrent.futures
+import os
+from functools import partialmethod
+import tqdm
+import time
 
 def sample(N, nodes, phi):
     X, datamodel = sampleFromTorusGraph(
@@ -33,7 +38,8 @@ def NCE_estimate(X, N, nodes, K):
     theta = model.theta.detach().flatten().numpy()
     return theta
 
-def single_run(N, nodes, phi, K):
+def single_run(cv_runs, N, nodes, phi, K):
+    print(f"Running 1 round of {cv_runs} rounds.")
     X, datamodel = sample(N, nodes, phi)
     phiSM, covPhiSM = SM(X, datamodel).compPhiHatAndCovPhiHat()
     theta = NCE_estimate(X, N, nodes, K)
@@ -43,14 +49,27 @@ def single_run(N, nodes, phi, K):
 
     return dist_SM, dist_NCE
 
-def cross_val_runs(cv_runs, N, nodes, phi, K):
+def cross_val_runs(cv_runs, N, nodes, phi, K, max_workers=None):
     dist_SMs, dist_NCEs = [], []
-    for i in range(cv_runs):
-        print(f"\n--- Round {i+1} of {cv_runs}: ---\n")
-        dist_SM, dist_NCE = single_run(N, nodes, phi, K)
+    i = 1
+
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+        futures = [executor.submit(single_run, cv_runs, N, nodes, phi, K) for i in range(cv_runs)]
+        results = [future.result() for future in concurrent.futures.as_completed(futures)]
+
+    for dist_SM, dist_NCE in results:
         dist_SMs.append(dist_SM)
         dist_NCEs.append(dist_NCE)
+
     return dist_SMs, dist_NCEs
+
+    # dist_SMs, dist_NCEs = [], []
+    # for i in range(cv_runs):
+    #     print(f"\n--- Round {i+1} of {cv_runs}: ---\n")
+    #     dist_SM, dist_NCE = single_run(N, nodes, phi, K)
+    #     dist_SMs.append(dist_SM)
+    #     dist_NCEs.append(dist_NCE)
+    # return dist_SMs, dist_NCEs
 
 def plot(dist_SMs, dist_NCEs):
     fig, ax = plt.subplots()
@@ -61,12 +80,20 @@ def plot(dist_SMs, dist_NCEs):
     plt.show()
 
 if __name__ == "__main__":
-   N = 1000 # samples
-   nodes = 3
-   K = 1 # single model
-   cv_runs = 10
-   phi = np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ])
-   dist_SMs, dist_NCEs = cross_val_runs(cv_runs, N, nodes, phi, K)
-   plot(dist_SMs, dist_NCEs)
+    os.environ['DISABLE_TQDM'] = 'True'
+    tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)
+    start_time = time.time()
+
+    N = 1000 # samples
+    nodes = 3
+    K = 1 # single model
+    cv_runs = 10
+
+    print(f"Estimated time: {10*cv_runs} sec")
+
+    phi = np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ])
+    dist_SMs, dist_NCEs = cross_val_runs(cv_runs, N, nodes, phi, K)
+    print(f"Time taken = {time.time() - start_time}")
+    plot(dist_SMs, dist_NCEs)
 
 

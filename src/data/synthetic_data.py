@@ -9,6 +9,7 @@
 import numpy as np
 from typing import List, Tuple, Any
 from tqdm import tqdm
+import os
 
 import sys
 sys.path.insert(0, '.')
@@ -58,7 +59,7 @@ def sampleFromTorusGraph(
     iKeep = 0
 
     S = np.zeros((nodes, samples))
-    for i in tqdm(range(totalSamples), "Sampling data..."):
+    for i in tqdm(range(totalSamples), "Sampling data...", disable=os.environ.get("DISABLE_TQDM", False)):
         for k in range(nodes):
             smDelta = np.concatenate(( x[:k]     - np.pi/2, 
                                        x[(k+1):] + np.pi/2 ))

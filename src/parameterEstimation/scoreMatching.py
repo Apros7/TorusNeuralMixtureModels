@@ -4,6 +4,7 @@ sys.path.insert(0, '.')
 import numpy as np
 import scipy.linalg
 from tqdm import tqdm
+import os
 
 from src.data.synthetic_data import TorusGraphInformation
 
@@ -139,7 +140,7 @@ class SM():
             gammaXt_trials = np.zeros((trials,param,param))
         except MemoryError:
             cache_gammaXt = False
-        for t in tqdm(range(trials), "Running Score Matching"):
+        for t in tqdm(range(trials), "Running Score Matching", disable=os.environ.get("DISABLE_TQDM", False)):
             gammaXt = self.compGammaXt(t, sC, sS, sAlpha, sBeta, sGamma, sDelta)
             if cache_gammaXt:
                 gammaXt_trials[t, :, :] = gammaXt
