@@ -77,6 +77,7 @@ class TorusGraphs(nn.Module):
             cosn = torch.cos(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])
             sinn = torch.sin(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])
             log_prob_noise = self.theta[:,:,z]@torch.stack([cosn,sinn],dim=0)
+        log_prop_data_copy = log_prob_data.detach().numpy()
         log_prob_data = torch.logsumexp(log_prob_data + self.logc.view(-1,1),dim=0)
         log_prob_noise = torch.logsumexp(log_prob_noise + self.logc.view(-1,1),dim=0)
 
@@ -92,6 +93,6 @@ class TorusGraphs(nn.Module):
         J = torch.mean(torch.log(torch.tensor(N))+log_prob_data - log_J1_denom,dim=-1)+torch.mean(torch.log(torch.tensor(N))+log_ny - log_J2_denom,dim=-1)
 
         if self.return_log_prop_data:
-            return (J, log_prob_data)
+            return (J, log_prop_data_copy)
         else:
             return J
