@@ -4,8 +4,7 @@ sys.path.insert(0, '.')
 
 from src.data.synthetic_data import sampleFromTorusGraph
 from src.parameterEstimation.scoreMatching import SM
-from src.parameterEstimation.trainNCE import mixture_torch_loop
-from src.parameterEstimation.NCE import TorusGraphs
+from src.parameterEstimation.NCE import NCE
 
 import numpy as np
 import torch
@@ -32,8 +31,8 @@ def NCE_estimate(X, N, nodes, K):
     X = torch.from_numpy(X).float().T
     noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) 
 
-    model = TorusGraphs(nodes=X.shape[1],K=K)
-    model, objective = mixture_torch_loop(X,noise,model)
+    model = NCE(nodes=X.shape[1],K=K)
+    model.run(X,noise)
 
     theta = model.theta.detach().flatten().numpy()
     return theta
