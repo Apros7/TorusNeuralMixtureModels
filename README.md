@@ -40,7 +40,7 @@ Quantify the differens in phi for a single Torus Graph using SM vs TG NCE compar
 make sm_vs_tg_boxplot
 ```
 
-See the NCE loss over time when estimating parameters **MISSING**
+See the NCE loss over time when estimating parameters 
 ```
 make nce_loss
 ```
@@ -65,6 +65,11 @@ make real_sm_vs_tg_boxplot
 Visualize phi for a single Torus Graph using SM vs TG NCE **MISSING**
 ```
 make real_sm_vs_tg_visualization
+```
+
+Estimate NCE loss over the amount of fitting torus graphs **MISSING**
+```
+make real_nce_loss_tgmm
 ```
 
 ## Toolbox

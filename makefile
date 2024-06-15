@@ -20,7 +20,7 @@ make sm_vs_tg_boxplot:
 	cd $(MAIN_FOLDER) && python3 src/results/sm_vs_tg_boxplot.py
 
 make nce_loss:
-	cd $(MAIN_FOLDER)
+	cd $(MAIN_FOLDER) && python3 src/results/see_nce_loss.py
 
 # make nce_loss_tgmm:
 # 	cd $(MAIN_FOLDER)
