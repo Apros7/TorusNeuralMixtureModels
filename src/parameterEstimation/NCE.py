@@ -4,7 +4,7 @@ import torch.nn as nn
 
 from tqdm import tqdm
 import os
-
+import numpy as np
 
 class NCE(nn.Module):
     def __init__(self, nodes:int, K:int, return_log_prop_data: bool = False, steps: int = 2000, lr: float = 0.5):
@@ -33,6 +33,8 @@ class NCE(nn.Module):
 
     def run(self,X,noise): 
         optimizer = torch.optim.Adam(self.parameters(),lr=self.lr)
+        if isinstance(X, np.ndarray):
+            X = torch.from_numpy(X).float().T
 
         for epoch in tqdm(range(self.steps), desc="NCE training", disable=os.environ.get("DISABLE_TQDM", False)):
             if self.return_log_prop_data:    

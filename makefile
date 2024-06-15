@@ -14,9 +14,16 @@ make best_lr_nce_tg:
 make best_lr_nce_tgmm:
 	cd $(MAIN_FOLDER) && python3 src/results/NCE_lr_tgmm.py
 
+# make sm_vs_tg_visualization
+
 make sm_vs_tg_boxplot:
 	cd $(MAIN_FOLDER) && python3 src/results/sm_vs_tg_boxplot.py
 
-## Real data
+make nce_loss:
+	cd $(MAIN_FOLDER)
 
+# make nce_loss_tgmm:
+# 	cd $(MAIN_FOLDER)
+
+## Real data
 
