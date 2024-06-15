@@ -6,7 +6,7 @@ import os
 import sys
 sys.path.insert(0, '.')
 from src.data.synthetic_data import sampleFromTorusGraph
-from src.parameterEstimation.NCE import TorusGraphs
+from src.parameterEstimation.NCE import NCE
 
 
 
@@ -16,7 +16,7 @@ def mixture_torch_loop(X,noise,model, lr=0.1):
     optimizer = torch.optim.Adam(model.parameters(),lr=lr)
     objective = []
 
-    for epoch in tqdm(range(10000), desc="NCE training", disable=os.environ.get("DISABLE_TQDM", False)):
+    for epoch in tqdm(range(model.nce_steps), desc="NCE training", disable=os.environ.get("DISABLE_TQDM", False)):
         if model.return_log_prop_data:    
             obj, log_prop_data = model.NCE_objective_function(X,noise)
             obj = -obj
@@ -46,7 +46,7 @@ if __name__=="__main__":
    noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution
 
 
-   model = TorusGraphs(nodes=X.shape[1],K=1)
+   model = NCE(nodes=X.shape[1],K=1)
    model,objective = mixture_torch_loop(X,noise,model)
 
 

@@ -33,8 +33,9 @@ class SM():
         self.params = dm.params
         self.trials = dm.samples
         self.nodes = dm.nodes
-        
 
+    def run(self): return self.compPhiHatAndCovPhiHat()
+        
     # Sufficient Statistics
     def compSufStat(self):
         X = self.X
