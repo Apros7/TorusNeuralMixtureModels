@@ -30,7 +30,7 @@ Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Mo
 make best_lr_nce_tgmm:
 ```
 
-Visualize phi for a single Torus Graph using SM vs TG NCE **MISSING**
+Visualize phi for a single Torus Graph using SM vs TG NCE
 ```
 make sm_vs_tg_visualization
 ```
