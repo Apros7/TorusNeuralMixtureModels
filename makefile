@@ -4,7 +4,7 @@ install:
 	python3 -m pip install -r requirements.txt
 
 # REPRODUCING RESULTS FOR REPORT
-# In all cases, the parameters can be adjusted in the file refered in the makefile if necessary.
+# In all cases, the parameters can be adjusted in the file referred in the makefile if necessary.
 
 ## Synthetic data:
 
@@ -27,4 +27,16 @@ make nce_loss:
 # 	cd $(MAIN_FOLDER)
 
 ## Real data
+
+make real_best_lr_nce_tgmm:
+	cd $(MAIN_FOLDER)
+
+make real_tgmm_boxplot:
+	cd $(MAIN_FOLDER)
+
+make real_tgmm_viz:
+	cd $(MAIN_FOLDER)
+
+make real_nce_loss_tgmm:
+	cd $(MAIN_FOLDER)
 

@@ -32,7 +32,7 @@ make best_lr_nce_tgmm:
 
 Visualize phi for a single Torus Graph using SM vs TG NCE
 ```
-make sm_vs_tg_visualization
+make sm_vs_tg_viz
 ```
 
 Quantify the differens in phi for a single Torus Graph using SM vs TG NCE compared to the sampled phi
@@ -57,14 +57,14 @@ Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Mo
 make real_best_lr_nce_tgmm:
 ```
 
-Quantify the differens in phi for a single Torus Graph using SM vs TG NCE compared to the sampled phi **MISSING**
+Quantify the differens in output class between true output and TGMM **MISSING**
 ```
-make real_sm_vs_tg_boxplot
+make real_tgmm_boxplot
 ```
 
-Visualize phi for a single Torus Graph using SM vs TG NCE **MISSING**
+Visualize phi for a single Torus Graph using TGMM NCE **MISSING**
 ```
-make real_sm_vs_tg_visualization
+make real_tgmm_viz
 ```
 
 Estimate NCE loss over the amount of fitting torus graphs **MISSING**
