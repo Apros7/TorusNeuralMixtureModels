@@ -52,7 +52,7 @@ class TorusGraph():
         nodes: int,
         samples: int = 100000,
         nModels: int = 1,
-        estimationMethod: NCE or SM = SM,
+        estimationMethod: NCE or SM = None,
         data: np.ndarray = None,
         noise: np.ndarray = None,
         TGInformation: TorusGraphInformation = None,
@@ -69,7 +69,10 @@ class TorusGraph():
         if self.true_vals is None:
             logging.info("You did not set true vals, so estimating them from parameters, this could be dangerous")
             self.true_vals = syndata_true_labels(nModels = nModels, samples = samples // nModels)
-        if isinstance(self.estimationMethod, SM) and TGInformation is None:
+        if estimationMethod is None and self.TGInformation is not None:
+            logging.info("You did not set an estimation method, so it defaults to Score Matching")
+            self.estimationMethod = SM(self.data, self.TGInformation)
+        if isinstance(self.estimationMethod, SM) and self.TGInformation is None:
             logging.warning("You wanted to estimate using SM, but no TorusGraphInformation was set, so switching to using NCE for parameter estimation.")
             self.estimationMethod = NCE(nodes, nModels)
         if isinstance(self.estimationMethod, NCE):
@@ -77,6 +80,8 @@ class TorusGraph():
             self.estimationMethod.run(self.data, self.noise)
         elif isinstance(self.estimationMethod, SM):
             self.estimationMethod.run()
+        else:
+            raise NotImplementedError("Not implemented for estimation method", type)
         self.info = {"nodes": nodes, "samples": samples, "nModels": nModels, "estimation method": self.estimationMethod.__class__.__name__}
     
     def evaluate(self, save_dest: str = None):

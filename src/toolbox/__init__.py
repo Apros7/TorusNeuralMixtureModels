@@ -7,3 +7,8 @@ from src.toolbox.data import sample_syndata_torusgraph, syndata_true_labels, est
 from src.data.synthetic_data import TorusGraphInformation
 from src.toolbox.eval import calc_NMI, visualize_phase_coherens
 from src.toolbox.torus import TorusGraph
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s, %(levelname)s]: %(message)s')
+logging.getLogger('matplotlib.font_manager').setLevel(logging.WARNING)
