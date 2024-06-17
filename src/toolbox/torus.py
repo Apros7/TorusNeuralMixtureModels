@@ -69,7 +69,7 @@ class TorusGraph():
             else:
                 self.data = sample_syndata_torusgraph(nodes = nodes, samples = samples, nModels = nModels, return_datamodel = False)
             self.true_vals = syndata_true_labels(nModels = nModels, samples = samples)
-        if self.TGInformation.samples:
+        if self.TGInformation and self.TGInformation.samples:
             samples = self.TGInformation.samples
         if self.true_vals is None:
             logging.info("You did not set true vals, so estimating them from parameters, this could be dangerous")
@@ -103,6 +103,7 @@ class TorusGraph():
         for k in range(self.info["nModels"]):
             preds_for_k_idx = np.where(adjusted_pred_labels == k)
             preds_distribution = Counter(self.true_vals[preds_for_k_idx])
+            print(preds_distribution)
             distributions[k] = [preds_distribution.get(i, 0) for i in range(self.info["nModels"])]
 
         print(distributions)

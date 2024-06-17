@@ -26,35 +26,35 @@ def sample(N, nodes, phi, nModels) -> Tuple[np.ndarray, TorusGraphInformation]:
     )
     return X, datamodel
 
-def NCE_estimate(X, N, nodes, K, lr = 0.1, nce_steps = 2000):
+def NCE_estimate(X, N, nodes, K, step = 0.1):
     X = torch.from_numpy(X).float().T
-    estimation_method = NCE(nodes = X.shape[1], K = K, lr = lr, steps = nce_steps, return_log_prop_data = True)
+    estimation_method = NCE(nodes = X.shape[1], K = K, lr = 0.1, steps = step, return_log_prop_data = True)
     torus_graph = TorusGraph(nodes = X.shape[1], samples = X.shape[0], data = X, nModels = K, estimationMethod = estimation_method)
 
     theta = estimation_method.theta.detach().flatten().numpy()
-    return [lr, theta, torus_graph]
+    return [step, theta, torus_graph]
 
-def single_run(N, nodes, phi, K, lr_dict: dict, nce_steps: int):
+def single_run(N, nodes, phi, K, steps_dict: dict):
     X, datamodel = sample(N, nodes, phi, nModels = K)
     phi = list(datamodel.phi)
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=None) as executor:
-        futures = [executor.submit(NCE_estimate, X, N, nodes, K, lr = lr_i, nce_steps = nce_steps) for lr_i in lr_dict.keys()]
+        futures = [executor.submit(NCE_estimate, X, N, nodes, K, step = step) for step in steps_dict.keys()]
         results = [future.result() for future in concurrent.futures.as_completed(futures)]
 
-    for lr_i, theta, torus_graph in results:
+    for step, theta, torus_graph in results:
         if K == 1:
             value = np.linalg.norm(phi - theta.reshape((K, -1)))
         else:
             value = torus_graph.evaluate()
-        lr_dict[lr_i].append(value)
+        steps_dict[step].append(value)
         
-    return lr_dict
+    return steps_dict
 
-def cross_val_runs(cv_runs, N, nodes, phi, K, lr_dict, nce_steps):
+def cross_val_runs(cv_runs, N, nodes, phi, K, steps_dict):
 
     for _ in tqdm(range(cv_runs)):
-        lr_dict = single_run(N, nodes, phi, K, lr_dict, nce_steps)
+        lr_dict = single_run(N, nodes, phi, K, steps_dict)
 
     return lr_dict
 
@@ -67,24 +67,23 @@ def plot(lr_dict, title):
     plt.show()
 
 if __name__ == "__main__":
-    os.environ['DISABLE_TQDM'] = 'True'
+    # os.environ['DISABLE_TQDM'] = 'True'
     start_time = time.time()
 
     N = 1000 # samples
     nodes = 3
     K = 3 # single model
-    cv_runs = 2
-    nce_steps = 2000
+    cv_runs = 10
 
-    lrs_to_test = [10, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
-    lr_dict = {lr: [] for lr in lrs_to_test}
+    steps_to_test = [50, 200, 500, 1000, 2000, 5000]
+    steps_dict = {lr: [] for lr in steps_to_test}
 
     print(f"Estimated time: {40*cv_runs} sec")
 
     phi = None # you can specify here if you want
-    lr_dict = cross_val_runs(cv_runs, N, nodes, phi, K, lr_dict, nce_steps)
+    steps_dict = cross_val_runs(cv_runs, N, nodes, phi, K, steps_dict)
     print(f"Time taken = {time.time() - start_time}")
-    print(lr_dict)
-    plot(lr_dict, 'Boxplot of NCE estimation with varying learning rate')
+    print(steps_dict)
+    plot(steps_dict, 'Boxplot of NCE estimation with varying steps')
 
 
