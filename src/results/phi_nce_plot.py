@@ -12,6 +12,9 @@ import seaborn as sns
 import os
 import scipy
 import time
+from src.data.synthetic_data import sampleFromTorusGraph
+from src.parameterEstimation.NCE import NCE
+from src.parameterEstimation.trainNCE import mixture_torch_loop
 
 
 def get_alpha_beta(theta):
@@ -22,9 +25,9 @@ def get_alpha_beta(theta):
     
     
     '''
-    K = theta.shape[0]
+    K = model.K
     theta = theta.detach().numpy()
-    n = estimation_method.nodes
+    n = nodes
     idx = torch.triu_indices(n,n,1)
     alpha = [np.zeros((n,n)) for i in range(K)]
     beta = alpha
@@ -76,49 +79,43 @@ if __name__ == "__main__":
     lrs_to_test = [10, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
     lr_dict = {lr: [] for lr in lrs_to_test}
 
-    data, true_vals = load_sample_data()
-    data = torch.from_numpy(data).float()
+    N = 200 # samples
+    nodes = 3
+    K = 3 # number of models (or components)
 
-    estimation_method = NCE(
-        nodes = data.shape[1], 
-        K = K, 
-        lr = 0.1, 
-        steps = nce_steps, 
-        return_log_prop_data = True)
+    data, datamodel = sampleFromTorusGraph(
+            nodes = nodes,
+            samples = N,
+            phi = None,
+            fitFCM = False,
+            fitPAD = True,
+            fitPAS = False,
+            return_datamodel = True
+        )
+    data = torch.from_numpy(data).float().T
+    noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution, mellem 0 og 2*pi
 
-    torus_graph = TorusGraph(
-        nodes = data.shape[1], 
-        samples = data.shape[0], 
-        data = data, 
-        nModels = K, 
-        estimationMethod = estimation_method, 
-        true_vals = true_vals)
 
-    value = torus_graph.evaluate()
-
-    theta = estimation_method.theta
+    model = NCE(nodes=data.shape[1],K=3,return_log_prop_data=False)
+    model,objective = mixture_torch_loop(data,noise,model)
+    theta,c = model.theta,model.logc
 
     Ps = get_phi_corr(theta)
 
     plt.figure(figsize=(16,4))
     plt.subplot(1,3,1)
     plot = sns.heatmap(Ps[0])
-    plot.set_xticklabels(['1','2','3','4','5','6','7'])
-    plot.set_yticklabels(['1','2','3','4','5','6','7'])
     plt.title('Component 1')
 
     plt.subplot(1,3,2)
     plot = sns.heatmap(Ps[1])
-    plot.set_xticklabels(['1','2','3','4','5','6','7'])
-    plot.set_yticklabels(['1','2','3','4','5','6','7'])
     plt.title('Component 2')
 
     plt.subplot(1,3,3)
     plot = sns.heatmap(Ps[2])
-    plot.set_xticklabels(['1','2','3','4','5','6','7'])
-    plot.set_yticklabels(['1','2','3','4','5','6','7'])
     plt.title('Component 3')
-    plt.savefig('src/plots/real_data_phi_heatmap.png')
+
+    plt.savefig('src/plots/syn_data_phi_heatmap.png')
     plt.show()
 
     
