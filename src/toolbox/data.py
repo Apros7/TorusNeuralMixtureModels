@@ -1,6 +1,7 @@
 from typing import List, Tuple
 import numpy as np
 import torch
+import logging
 
 from src.data.synthetic_data import sampleFromTorusGraph, TorusGraphInformation
 from src.data.real_data import load_sample_data
@@ -16,7 +17,7 @@ NMODELS_TO_PHI = {
     3: [
         np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ]), 
         np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ]), 
-        np.block([ 8*np.cos(np.pi), 0, 0, 0, 0, 8*np.sin(np.pi) ])
+        np.block([ 0, 0, 8*np.cos(np.pi)*np.cos(np.pi), 8*np.cos(np.pi)*np.sin(np.pi), 0, 0 ])
     ],
 }
 
@@ -37,7 +38,9 @@ def sample_syndata_torusgraph(
     
     """
     if phi is None and nModels > 3: raise NotImplementedError("Default phi not implemented for higher than 3 models. You can always specify your own to Phi array to prevent this error.")
-    if phi is None: phi = NMODELS_TO_PHI[nModels]
+    if phi is None: 
+        phi = NMODELS_TO_PHI[nModels]
+        logging.warning(f"You did not set phi, so setting it to: {phi}")
     if len(phi) != nModels: raise ValueError(f"The number of models to drawn from (nModels) has to match the length of the phi array (should be {nModels}, but is {len(phi)}")
     all_samples = []
     for i in range(nModels):

@@ -8,13 +8,13 @@ import os
 
 
 if __name__ == "__main__":
-    os.environ['DISABLE_TQDM'] = 'True'
+    # os.environ['DISABLE_TQDM'] = 'True'
     start_time = time.time()
 
     N = 1000 # samples
     nodes = 3
-    K = 2 # single model
-    cv_runs = 10
+    K = 3 # single model
+    cv_runs = 2
     nce_steps = 5000
 
     lrs_to_test = [10, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]

@@ -11,6 +11,8 @@ import numpy as np
 import logging
 import matplotlib.pyplot as plt
 import torch
+from sklearn.metrics import accuracy_score
+from collections import Counter
 
 class TorusGraph():
     """
@@ -93,11 +95,17 @@ class TorusGraph():
             raise NotImplementedError("You need to set return log prop data to True in your estimation method")
         if self.true_vals is None:
             raise NotImplementedError("You need to set true vals before being able to run eval")
-        pred_labels = classify_points(self.estimationMethod, self.estimationMethod.log_prop_data, self.info["samples"])
-        pred_labels_ohe = ohe(pred_labels, self.info["nModels"])
-        self.true_vals = ohe(torch.tensor(self.true_vals), self.info["nModels"])
+        pred_labels = classify_points(self.estimationMethod, self.estimationMethod.log_prop_data, self.info["samples"]).detach().numpy()
+        adjusted_pred_labels = adjust_pred_labels(pred_labels, self.info["nModels"], self.true_vals)
+        print("The distribution is:\n---------------")
+        print("Preds: ", Counter(adjusted_pred_labels))
+        print("Trues: ", Counter(self.true_vals))
+        # return pred_labels, self.true_vals
+        # pred_labels_ohe = ohe(pred_labels, self.info["nModels"])
+        # self.true_vals = ohe(torch.tensor(self.true_vals), self.info["nModels"])
         # print(pred_labels_ohe.shape, self.true_vals.shape)
-        return calc_NMI(pred_labels_ohe, self.true_vals)
+        return accuracy_score(adjusted_pred_labels, self.true_vals)
+        # return calc_NMI(pred_labels_ohe, self.true_vals)#, accuracy_score(pred_labels, self.true_vals)
 
         # if save_dest is not None:
         #     plt.savefig(save_dest)

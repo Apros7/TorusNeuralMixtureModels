@@ -21,7 +21,12 @@ def load_sample_data():
             stage_data = np.loadtxt(stage_file)
             phases = np.concatenate((phases, phase_data))
             stages = np.concatenate((stages, stage_data))
-    return phases, stages
+    indices_to_keep = stages != 3
+    filtered_stages = stages[indices_to_keep]
+    filtered_phases = phases[indices_to_keep]
+    return filtered_phases, filtered_stages
+
+
 
 if __name__ == "__main__":
     phases, stages = load_sample_data()
