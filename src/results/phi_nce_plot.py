@@ -4,6 +4,7 @@ import scipy.special
 sys.path.insert(0, '.')
 
 from src.toolbox import load_sample_data, TorusGraph, NCE, sample_syndata_torusgraph
+from src.toolbox.data import NMODELS_TO_PHI
 import time
 import numpy as np
 import torch
@@ -17,7 +18,7 @@ from src.parameterEstimation.NCE import NCE
 from src.parameterEstimation.trainNCE import mixture_torch_loop
 
 
-def get_alpha_beta(theta):
+def get_alpha_beta(theta, K):
     '''Alpha and Beta gets computed here with theta as input.
     Alpha and beta will be returned as a symmetric matrix referring to cos_phi and sin_phi. 
 
@@ -25,7 +26,6 @@ def get_alpha_beta(theta):
     
     
     '''
-    K = model.K
     theta = theta.detach().numpy()
     n = nodes
     idx = torch.triu_indices(n,n,1)
@@ -52,8 +52,8 @@ def I1(x):
     # scipy.special.i1(x) # Bessel function of the first kind of real order and complex argument
     return scipy.special.i1(x)
 
-def get_phi_corr(theta): # this returns P_jk, but should be a matrix of correlations between signals
-    alpha, beta = get_alpha_beta(theta)
+def get_phi_corr(theta, K): # this returns P_jk, but should be a matrix of correlations between signals
+    alpha, beta = get_alpha_beta(theta, K)
     n = alpha[0].shape[0]
     P = [np.zeros((n,n)) for i in range(K)]
     for component in range(K):
@@ -63,12 +63,11 @@ def get_phi_corr(theta): # this returns P_jk, but should be a matrix of correlat
     return P
 
 
-def get_true_phi(phi):
-    K = model.K
+def get_true_phi(phi, K):
     n = nodes
     idx = torch.triu_indices(n,n,1)
     alpha = [np.zeros((n,n)) for i in range(K)]
-    beta = alpha
+    beta = [np.zeros((n,n)) for i in range(K)]
     Phi = []
     for component in np.arange(0,K):
         Phi.append(phi[component].reshape(-1,K))
@@ -85,6 +84,8 @@ def get_true_phi(phi):
     for component in range(K):
         for row in range(n):
             for col in range(n):
+                print(alpha[component][row,col], beta[component][row,col])
+                print(row, col, np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2), I1(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2)), I0(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2)))
                 P[component][row,col] = I1(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2)) / I0(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2))
     return P
 
@@ -96,35 +97,28 @@ if __name__ == "__main__":
 
     N = 1000 # samples
     nodes = 3
-    K = 3 
-    cv_runs = 10
+    K = 3 # single model
     nce_steps = 5000
+    lr = 0.1
 
-    lrs_to_test = [10, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
-    lr_dict = {lr: [] for lr in lrs_to_test}
+    nce = NCE(
+        nodes = nodes,
+        K = K,
+        steps = nce_steps,
+        lr = lr
+    )
+    tg = TorusGraph(
+        nodes = nodes,
+        samples = N,
+        nModels = K,
+        estimationMethod = nce,
+        return_datamodel = True,
+    )
 
-    N = 200 # samples
-    nodes = 3
-    K = 3 # number of models (or components)
+    phi = tg.TGInformation.phi
+    theta = tg.estimationMethod.theta
 
-    data, datamodel = sampleFromTorusGraph(
-            nodes = nodes,
-            samples = N,
-            phi = None,
-            fitFCM = False,
-            fitPAD = True,
-            fitPAS = False,
-            return_datamodel = True
-        )
-    data = torch.from_numpy(data).float().T
-    noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution, mellem 0 og 2*pi
-
-
-    model = NCE(nodes=data.shape[1],K=3,return_log_prop_data=False)
-    model,objective = mixture_torch_loop(data,noise,model)
-    theta,c = model.theta,model.logc
-
-    Ps = get_phi_corr(theta)
+    Ps = get_phi_corr(theta, K)
 
     plt.figure(figsize=(16,4))
     plt.subplot(1,3,1)
@@ -143,12 +137,7 @@ if __name__ == "__main__":
     plt.show()
 
     # Doing it for the true phi:
-    phi = [
-        np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ]), 
-        np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ]), 
-        np.block([ 0, 0, 8*np.cos(np.pi)*np.cos(np.pi), 8*np.cos(np.pi)*np.sin(np.pi), 0, 0 ])
-    ]
-    true_phis = get_true_phi(phi)
+    true_phis = get_true_phi(phi, K)
 
     plt.figure(figsize=(16,4))
     plt.subplot(1,3,1)
