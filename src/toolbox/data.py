@@ -58,7 +58,10 @@ def sample_syndata_torusgraph(
         ))
     if nModels == 1: return all_samples[0]
     samples_drawn = np.concatenate([x[0].T for x in all_samples]).T
-    all_phi = np.array([x[1].phi for x in all_samples])
+    try:
+        all_phi = np.array([x[1].phi for x in all_samples])
+    except AttributeError: 
+        raise AttributeError("Trying to create all phi, but did not work. You most likely have to set 'return_datamodel = True' when initializing the TorusGraph class")
     full_TGInformation = TorusGraphInformation(
         samples = samples * nModels,
         phi = all_phi,

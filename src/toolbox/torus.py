@@ -69,6 +69,8 @@ class TorusGraph():
             else:
                 self.data = sample_syndata_torusgraph(nodes = nodes, samples = samples, nModels = nModels, return_datamodel = False)
             self.true_vals = syndata_true_labels(nModels = nModels, samples = samples)
+        if self.TGInformation.samples:
+            samples = self.TGInformation.samples
         if self.true_vals is None:
             logging.info("You did not set true vals, so estimating them from parameters, this could be dangerous")
             self.true_vals = syndata_true_labels(nModels = nModels, samples = samples // nModels)
@@ -79,8 +81,7 @@ class TorusGraph():
             logging.warning("You wanted to estimate using SM, but no TorusGraphInformation was set, so switching to using NCE for parameter estimation.")
             self.estimationMethod = NCE(nodes, nModels)
         if isinstance(self.estimationMethod, NCE):
-            if self.noise is None and self.TGInformation is not None: self.noise = estimate_uniform_noise(nodes, self.TGInformation.samples)
-            elif self.noise is None: self.noise = estimate_uniform_noise(nodes, samples)
+            if self.noise is None: self.noise = estimate_uniform_noise(nodes, samples)
             self.estimationMethod.run(self.data, self.noise)
         elif isinstance(self.estimationMethod, SM):
             self.estimationMethod.run()
@@ -88,28 +89,48 @@ class TorusGraph():
             raise NotImplementedError("Not implemented for estimation method", type)
         self.info = {"nodes": nodes, "samples": samples, "nModels": nModels, "estimation method": self.estimationMethod.__class__.__name__, "returned datamodel": return_datamodel}
     
-    def evaluate(self, save_dest: str = None):
-        """
-        NOT DONE
-        save_dest (Optional, default None): If specified, then will save the plot at that specified location
-        """
+    def evaluate(self):
+        adjusted_pred_labels = self.get_preds()
+        print("The distribution is:\n---------------")
+        print("Preds: ", Counter(adjusted_pred_labels))
+        print("Trues: ", Counter(self.true_vals))
+        return accuracy_score(adjusted_pred_labels, self.true_vals)
+        # return calc_NMI(pred_labels_ohe, self.true_vals)#, accuracy_score(pred_labels, self.true_vals)
+
+    def visualize(self):
+        adjusted_pred_labels = self.get_preds()
+        distributions = {}
+        for k in range(self.info["nModels"]):
+            preds_for_k_idx = np.where(adjusted_pred_labels == k)
+            preds_distribution = Counter(self.true_vals[preds_for_k_idx])
+            distributions[k] = [preds_distribution.get(i, 0) for i in range(self.info["nModels"])]
+
+        print(distributions)
+        fig, ax = plt.subplots()
+        x_values = list(distributions.keys())
+        bar_width = 0.8 / self.info["nModels"]
+        for i in range(self.info["nModels"]):
+            bars = [distributions[k][i] for k in x_values]
+            ax.bar([x + i * bar_width for x in range(len(x_values))], bars, bar_width, label=f"Model {i}")
+
+        # Set x-axis labels
+        ax.set_xticks([x + bar_width * (self.info["nModels"] - 1) / 2 for x in range(len(x_values))])
+        ax.set_xticklabels(x_values)
+        ax.set_title("Distribution of Predictions by Model")
+        ax.set_xlabel("Model Index")
+        ax.set_ylabel("Count")
+        ax.legend()
+        plt.show()
+
+    def get_preds(self):
         if not self.estimationMethod.return_log_prop_data:
             raise NotImplementedError("You need to set return log prop data to True in your estimation method")
         if self.true_vals is None:
             raise NotImplementedError("You need to set true vals before being able to run eval")
         pred_labels = classify_points(self.estimationMethod, self.estimationMethod.log_prop_data, self.info["samples"]).detach().numpy()
+        print(pred_labels.shape, self.true_vals.shape)
         adjusted_pred_labels = adjust_pred_labels(pred_labels, self.info["nModels"], self.true_vals)
-        print("The distribution is:\n---------------")
-        print("Preds: ", Counter(adjusted_pred_labels))
-        print("Trues: ", Counter(self.true_vals))
-        # return pred_labels, self.true_vals
-        # pred_labels_ohe = ohe(pred_labels, self.info["nModels"])
-        # self.true_vals = ohe(torch.tensor(self.true_vals), self.info["nModels"])
-        # print(pred_labels_ohe.shape, self.true_vals.shape)
-        return accuracy_score(adjusted_pred_labels, self.true_vals)
-        # return calc_NMI(pred_labels_ohe, self.true_vals)#, accuracy_score(pred_labels, self.true_vals)
+        return adjusted_pred_labels
 
-        # if save_dest is not None:
-        #     plt.savefig(save_dest)
-        # pass
+
 
