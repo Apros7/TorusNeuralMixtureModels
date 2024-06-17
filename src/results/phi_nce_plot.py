@@ -63,6 +63,30 @@ def get_phi_corr(theta): # this returns P_jk, but should be a matrix of correlat
     return P
 
 
+def get_true_phi(phi):
+    K = model.K
+    n = nodes
+    idx = torch.triu_indices(n,n,1)
+    alpha = [np.zeros((n,n)) for i in range(K)]
+    beta = alpha
+    Phi = []
+    for component in np.arange(0,K):
+        Phi.append(phi[component].reshape(-1,K))
+        for j in np.arange(0,idx.shape[1]):
+            alpha[component][idx[0,j],idx[1,j]] = Phi[component][0][j]
+            beta[component][idx[0,j],idx[1,j]] = Phi[component][1][j]
+
+        alpha[component] += alpha[component].T  
+        beta[component] += beta[component].T    
+        np.fill_diagonal(alpha[component], 1) 
+        np.fill_diagonal(beta[component], 1) 
+    n = alpha[0].shape[0]
+    P = [np.zeros((n,n)) for i in range(K)]
+    for component in range(K):
+        for row in range(n):
+            for col in range(n):
+                P[component][row,col] = I1(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2)) / I0(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2))
+    return P
 
 
 if __name__ == "__main__":
@@ -118,4 +142,27 @@ if __name__ == "__main__":
     plt.savefig('src/plots/syn_data_phi_heatmap.png')
     plt.show()
 
+    # Doing it for the true phi:
+    phi = [
+        np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ]), 
+        np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ]), 
+        np.block([ 0, 0, 8*np.cos(np.pi)*np.cos(np.pi), 8*np.cos(np.pi)*np.sin(np.pi), 0, 0 ])
+    ]
+    true_phis = get_true_phi(phi)
+
+    plt.figure(figsize=(16,4))
+    plt.subplot(1,3,1)
+    plot = sns.heatmap(true_phis[0])
+    plt.title('Component 1')
+
+    plt.subplot(1,3,2)
+    plot = sns.heatmap(true_phis[1])
+    plt.title('Component 2')
+
+    plt.subplot(1,3,3)
+    plot = sns.heatmap(true_phis[2])
+    plt.title('Component 3')
+
+    plt.savefig('src/plots/true_phi.png')
+    plt.show()
     
