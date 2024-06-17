@@ -15,9 +15,9 @@ NMODELS_TO_PHI = {
         np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ])
     ],
     3: [
-        np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ]), 
-        np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ]), 
-        np.block([ 0, 0, 8*np.cos(np.pi)*np.cos(np.pi), 8*np.cos(np.pi)*np.sin(np.pi), 0, 0 ])
+        np.block([ 0, 0, np.cos(np.pi), np.sin(np.pi), 0, 0 ]), 
+        np.block([ 0, 0, np.sin(np.pi), np.cos(np.pi), 0, 0 ]), 
+        np.block([ 0, np.cos(np.pi), 0, 0, np.sin(np.pi), 0 ])
     ],
 }
 

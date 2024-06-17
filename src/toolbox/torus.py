@@ -58,12 +58,13 @@ class TorusGraph():
         data: np.ndarray = None,
         noise: np.ndarray = None,
         TGInformation: TorusGraphInformation = None,
-        true_vals: np.ndarray = None
+        true_vals: np.ndarray = None,
+        return_datamodel: bool = False,
     ):
         self.true_vals, self.data, self.TGInformation, self.estimationMethod, self.noise = true_vals, data, TGInformation, estimationMethod, noise
         if data is None:
             logging.info("No data was set, so sampling synthetic data with default settings. If you wish to change those, sample the data beforehand. ")
-            if nModels == 1:
+            if nModels == 1 or return_datamodel:
                 self.data, self.TGInformation = sample_syndata_torusgraph(nodes = nodes, samples = samples, nModels = nModels, return_datamodel = True)
             else:
                 self.data = sample_syndata_torusgraph(nodes = nodes, samples = samples, nModels = nModels, return_datamodel = False)
@@ -78,13 +79,14 @@ class TorusGraph():
             logging.warning("You wanted to estimate using SM, but no TorusGraphInformation was set, so switching to using NCE for parameter estimation.")
             self.estimationMethod = NCE(nodes, nModels)
         if isinstance(self.estimationMethod, NCE):
-            if self.noise is None: self.noise = estimate_uniform_noise(nodes, samples)
+            if self.noise is None and self.TGInformation is not None: self.noise = estimate_uniform_noise(nodes, self.TGInformation.samples)
+            elif self.noise is None: self.noise = estimate_uniform_noise(nodes, samples)
             self.estimationMethod.run(self.data, self.noise)
         elif isinstance(self.estimationMethod, SM):
             self.estimationMethod.run()
         else:
             raise NotImplementedError("Not implemented for estimation method", type)
-        self.info = {"nodes": nodes, "samples": samples, "nModels": nModels, "estimation method": self.estimationMethod.__class__.__name__}
+        self.info = {"nodes": nodes, "samples": samples, "nModels": nModels, "estimation method": self.estimationMethod.__class__.__name__, "returned datamodel": return_datamodel}
     
     def evaluate(self, save_dest: str = None):
         """
