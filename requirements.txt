@@ -1,2 +1,6 @@
 tqdm==4.65.0
 numpy==1.26.2
+torch
+pickle
+matplotlib
+seaborn

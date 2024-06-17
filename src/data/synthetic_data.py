@@ -7,7 +7,7 @@
 ## All credit should go to them, yet they of course are not responsible for any mistakes
 
 import numpy as np
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Optional
 from tqdm import tqdm
 import os
 
@@ -20,13 +20,14 @@ from dataclasses import dataclass
 @dataclass
 class TorusGraphInformation:
     samples: int # trials
-    nodes: int
-    nodePairs: np.ndarray[np.ndarray[int, int]]
-    nNodePairs: int
-    params: int
+    phi: np.ndarray
     fitFCM: bool    # FirstCircularMoments
     fitPAD: bool    # PairwiseAngleDifferences
     fitPAS: bool    # PairwiseAngleSums
+    nodes: Optional[int] = None
+    nodePairs: Optional[np.ndarray[np.ndarray[int, int]]] = None
+    nNodePairs: Optional[int] = None
+    params: Optional[int] = None
 
 
 def sampleFromTorusGraph(
@@ -85,6 +86,7 @@ def sampleFromTorusGraph(
         datamodel = TorusGraphInformation(
                 samples = samples,
                 nodes = nodes,
+                phi = phi,
                 nodePairs = nodePairs,
                 nNodePairs = nNodePairs,
                 params = params,
@@ -94,10 +96,7 @@ def sampleFromTorusGraph(
         )
         return S, datamodel
     return S
-
-def sampleOutsideOfTorusGraph():
-    drawVonMises()
-    pass
+    
 
 if __name__ == "__main__":
     nodes = 4

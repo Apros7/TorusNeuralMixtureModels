@@ -11,15 +11,74 @@ source .venv/bin/activate
 make
 ```
 
-Then, run the tests to make sure the software works as expected:
-```
-make test
-```
+You are now ready to reproduce our results or work with our toolbox.
 
 ## Reproduce results
+
+In all cases, the parameters can be adjusted in the file refered in the makefile if necessary.
+The exact same code will be executed as done in our report, yet the data and initialization of the NCE is randomized, hence slightly different results will show.
+
+**On syn_data:**
+
+Find the best learning rate for the NCE algorithm using a single Torus Graph
 ```
-Reproduce
+make best_lr_nce_tg:
 ```
+
+Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Model
+```
+make best_lr_nce_tgmm:
+```
+
+Visualize phi for a single Torus Graph using SM vs TG NCE
+```
+make sm_vs_tg_viz
+```
+
+Quantify the differens in phi for a single Torus Graph using SM vs TG NCE compared to the sampled phi
+```
+make sm_vs_tg_boxplot
+```
+
+See the NCE loss over time when estimating parameters 
+```
+make nce_loss
+```
+
+See the NCE loss over the amount of fitting torus graphs **MISSING**
+```
+make nce_loss_tgmm
+```
+
+**on real data**
+
+Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Model on real data **MISSING**
+```
+make real_best_lr_nce_tgmm:
+```
+
+Quantify the differens in output class between true output and TGMM **MISSING**
+```
+make real_tgmm_boxplot
+```
+
+Visualize phi for a single Torus Graph using TGMM NCE **MISSING**
+```
+make real_tgmm_viz
+```
+
+Estimate NCE loss over the amount of fitting torus graphs **MISSING**
+```
+make real_nce_loss_tgmm
+```
+
+## Toolbox
+
+The toolbox tries to generalize our approach into functions to be used for other purposes.
+In some cases in simply documents another function called in our repo, as this has all the functionality needed to perform the action.
+In other cases the function exists somewhere else, but is imported into the toolbox to allow one to follow the directory to the original function:
+
+The following are available:
 
 ## Conclusions
 Conclusion
@@ -35,3 +94,7 @@ Conclusion
     url      = {https://api.semanticscholar.org/CorpusID:263608461}
 }
 ```
+
+What to do:
+- Lr nce mixture model
+- Apply to real data

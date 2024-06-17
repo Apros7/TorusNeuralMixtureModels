@@ -33,8 +33,11 @@ class SM():
         self.params = dm.params
         self.trials = dm.samples
         self.nodes = dm.nodes
-        
+        self.phi = None
+        self.covPhi = None
 
+    def run(self): return self.compPhiHatAndCovPhiHat()
+        
     # Sufficient Statistics
     def compSufStat(self):
         X = self.X
@@ -167,5 +170,8 @@ class SM():
 
         Linv = np.linalg.inv(L)
         covPhiHat = 1/trials * scipy.linalg.cho_solve((L, True), vHatX) @ Linv.T @ Linv
+
+        self.phi = phiHat
+        self.covPhi = covPhiHat
 
         return (phiHat, covPhiHat)

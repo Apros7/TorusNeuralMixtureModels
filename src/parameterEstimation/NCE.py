@@ -2,12 +2,18 @@
 import torch
 import torch.nn as nn
 
+from tqdm import tqdm
+import os
+import numpy as np
 
-class TorusGraphs(nn.Module):
-    def __init__(self, nodes:int, K:int, return_log_prop_data: bool = False):
+class NCE(nn.Module):
+    def __init__(self, nodes:int, K:int, return_log_prop_data: bool = False, steps: int = 2000, lr: float = 0.5):
         '''
         nodes: number of nodes
         K: number of models (or components) 
+        return_log_prop_data: bool to get log_prop_data out together with losses
+        steps: number of steps in the NCE algorithm
+        lr: learning rate for NCE
         
         '''
         super().__init__()
@@ -19,10 +25,36 @@ class TorusGraphs(nn.Module):
         self.theta = nn.Parameter(torch.randn(self.K,2,z))
         self.logc = nn.Parameter(torch.zeros(self.K))
         self.return_log_prop_data = return_log_prop_data
-
+        self.steps = steps
+        self.lr = lr
+        self.losses = []
 
         self.triu_indices = torch.triu_indices(nodes,nodes,offset=1)
 
+    def run(self,X,noise): 
+        optimizer = torch.optim.Adam(self.parameters(),lr=self.lr)
+        if isinstance(X, np.ndarray):
+            X = torch.from_numpy(X).float().T
+
+        for epoch in tqdm(range(self.steps), desc="NCE training", disable=os.environ.get("DISABLE_TQDM", False)):
+            if self.return_log_prop_data:    
+                obj, log_prop_data = self.NCE_objective_function(X,noise)
+                obj = -obj
+            else:
+                obj = -self.NCE_objective_function(X,noise)
+
+            if torch.isnan(-obj):
+                raise ValueError("Nan reached")
+            
+            optimizer.zero_grad(set_to_none=True)
+            obj.backward()
+            optimizer.step()
+            self.losses.append(-obj.item())
+                
+        if self.return_log_prop_data:
+            self.log_prop_data = log_prop_data
+            return self.losses,log_prop_data
+        return self.losses
 
     def NCE_objective_function(self,X,noise):
         
