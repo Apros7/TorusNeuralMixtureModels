@@ -52,12 +52,12 @@ make nce_loss_tgmm
 
 **on real data**
 
-Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Model on real data **MISSING**
+Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Model on real data
 ```
 make real_best_lr_nce_tgmm:
 ```
 
-Quantify the differens in output class between true output and TGMM **MISSING**
+Quantify the differens in output class between true output and TGMM
 ```
 make real_tgmm_boxplot
 ```
@@ -67,9 +67,14 @@ Visualize phi for a single Torus Graph using TGMM NCE **MISSING**
 make real_tgmm_viz
 ```
 
+Estimate NCE loss over a single TGMM
+```
+make real_nce_loss
+```
+
 Estimate NCE loss over the amount of fitting torus graphs **MISSING**
 ```
-make real_nce_loss_tgmm
+make real_nce_loss_fitting_tgmm
 ```
 
 ## Toolbox
@@ -98,3 +103,5 @@ Conclusion
 What to do:
 - Lr nce mixture model
 - Apply to real data
+- Fit NMI
+- 

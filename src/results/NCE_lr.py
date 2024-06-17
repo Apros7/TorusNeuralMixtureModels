@@ -26,24 +26,26 @@ def sample(N, nodes, phi, nModels) -> Tuple[np.ndarray, TorusGraphInformation]:
     )
     return X, datamodel
 
-def NCE_estimate(X, N, nodes, K, lr = 0.1, nce_steps = 2000):
-    X = torch.from_numpy(X).float().T
+def NCE_estimate(X, N, nodes, K, lr = 0.1, nce_steps = 2000, true_vals = None):
+    if isinstance(X, np.ndarray):
+        X = torch.from_numpy(X).float().T
     estimation_method = NCE(nodes = X.shape[1], K = K, lr = lr, steps = nce_steps, return_log_prop_data = True)
-    torus_graph = TorusGraph(nodes = X.shape[1], samples = X.shape[0], data = X, nModels = K, estimationMethod = estimation_method)
+    torus_graph = TorusGraph(nodes = X.shape[1], samples = X.shape[0], data = X, nModels = K, estimationMethod = estimation_method, true_vals = true_vals)
 
     theta = estimation_method.theta.detach().flatten().numpy()
     return [lr, theta, torus_graph]
 
-def single_run(N, nodes, phi, K, lr_dict: dict, nce_steps: int):
-    X, datamodel = sample(N, nodes, phi, nModels = K)
-    phi = list(datamodel.phi)
+def single_run(N, nodes, phi, K, lr_dict: dict, nce_steps: int, X = None, true_vals = None):
+    if X is None:
+        X, datamodel = sample(N, nodes, phi, nModels = K)
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=None) as executor:
-        futures = [executor.submit(NCE_estimate, X, N, nodes, K, lr = lr_i, nce_steps = nce_steps) for lr_i in lr_dict.keys()]
+        futures = [executor.submit(NCE_estimate, X, N, nodes, K, lr = lr_i, nce_steps = nce_steps, true_vals = true_vals) for lr_i in lr_dict.keys()]
         results = [future.result() for future in concurrent.futures.as_completed(futures)]
 
     for lr_i, theta, torus_graph in results:
         if K == 1:
+            phi = list(datamodel.phi)
             value = np.linalg.norm(phi - theta.reshape((K, -1)))
         else:
             value = torus_graph.evaluate()
@@ -51,10 +53,10 @@ def single_run(N, nodes, phi, K, lr_dict: dict, nce_steps: int):
         
     return lr_dict
 
-def cross_val_runs(cv_runs, N, nodes, phi, K, lr_dict, nce_steps):
+def cross_val_runs(cv_runs, N, nodes, phi, K, lr_dict, nce_steps, X = None, true_vals = None):
 
     for _ in tqdm(range(cv_runs)):
-        lr_dict = single_run(N, nodes, phi, K, lr_dict, nce_steps)
+        lr_dict = single_run(N, nodes, phi, K, lr_dict, nce_steps, X = X, true_vals = true_vals)
 
     return lr_dict
 
