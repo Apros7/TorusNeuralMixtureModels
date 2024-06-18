@@ -1,12 +1,9 @@
-
 import sys
 sys.path.insert(0, '.')
-
 from src.toolbox import NCE, TorusGraph, sample_syndata_torusgraph
 import time
 import os
 import matplotlib.pyplot as plt
-import numpy as np
 from tqdm import tqdm
 
 

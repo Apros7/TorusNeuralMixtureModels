@@ -1,21 +1,15 @@
 import sys
-
-import scipy.special
 sys.path.insert(0, '.')
 
-from src.toolbox import load_sample_data, TorusGraph, NCE, sample_syndata_torusgraph
-from src.toolbox.data import NMODELS_TO_PHI
+from src.toolbox import TorusGraph, NCE
 import time
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
 import scipy
 import time
-from src.data.synthetic_data import sampleFromTorusGraph
 from src.parameterEstimation.NCE import NCE
-from src.parameterEstimation.trainNCE import mixture_torch_loop
 
 
 def get_alpha_beta(theta, K):
