@@ -24,7 +24,7 @@ nce_loss:
 	cd $(MAIN_FOLDER) && python3 src/results/see_nce_loss.py
 
 nce_loss_tgmm:
-	cd $(MAIN_FOLDER) && python3 src/results/loss_over_time.py
+	cd $(MAIN_FOLDER) && python3 src/results/loss_over_k.py
 
 see_preds_dist:
 	cd $(MAIN_FOLDER) && python3 src/results/preds_dist.py
@@ -44,7 +44,7 @@ real_nce_loss:
 	cd $(MAIN_FOLDER) && python3 src/results/real_nce_loss_tgmm.py
 
 real_nce_loss_fitting_tgmm:
-	cd $(MAIN_FOLDER)
+	cd $(MAIN_FOLDER) && python3 src/results/real_loss_over_k.py
 
 real_see_preds_dist:
 	cd $(MAIN_FOLDER) && python3 src/results/real_preds_dist.py
