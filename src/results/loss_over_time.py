@@ -7,10 +7,11 @@ import time
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
 
 
 if __name__ == "__main__":
-    # os.environ['DISABLE_TQDM'] = 'True'
+    os.environ['DISABLE_TQDM'] = 'True'
     start_time = time.time()
 
     N = 1000 # samples
@@ -20,8 +21,8 @@ if __name__ == "__main__":
 
     Ks = [1, 2, 3, 4, 5]
     losses_dict = {K: [] for K in Ks}
-    
-    for _ in range(cv_runs): 
+
+    for _ in tqdm(range(cv_runs)): 
 
         data, datainformation = sample_syndata_torusgraph(
             nodes = nodes,
