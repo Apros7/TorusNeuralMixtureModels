@@ -15,9 +15,10 @@ NMODELS_TO_PHI = {
         np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ])
     ],
     3: [
-        np.block([ 0, 0, np.cos(np.pi), np.sin(np.pi), 0, 0 ]), 
-        np.block([ 0, 0, np.sin(np.pi), np.cos(np.pi), 0, 0 ]), 
-        np.block([ 0, np.cos(np.pi), 0, 0, np.sin(np.pi), 0 ])
+        np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ]), 
+        np.block([ 0, 0, 8*np.sin(np.pi), 8*np.cos(np.pi), 0, 0 ]), 
+        np.block([ 0, 0, -8*np.cos(np.pi), -8*np.sin(np.pi), 0, 0 ])
+        #np.block([ 0, 8*np.cos(np.pi), 0, 0, 8*np.sin(np.pi), 0 ])
     ],
 }
 
@@ -56,6 +57,9 @@ def sample_syndata_torusgraph(
             fitPAS = fitPAS,
             return_datamodel = return_datamodel
         ))
+    logging.warning("You might get a RuntimeError in the NCE objective function estimation with 'log_J2_denom'\
+        If that happens, modify your data after sampling but before giving it to the torus graph with:\
+            X = torch.from_numpy(X).float().T")
     if nModels == 1: return all_samples[0]
     samples_drawn = np.concatenate([x[0].T for x in all_samples]).T
     try:

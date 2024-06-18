@@ -14,8 +14,8 @@ if __name__ == "__main__":
     N = 1000 # samples
     nodes = 3
     K = 3 # single model
-    cv_runs = 2
-    nce_steps = 5000
+    cv_runs = 4
+    nce_steps = 2000
 
     lrs_to_test = [10, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
     lr_dict = {lr: [] for lr in lrs_to_test}

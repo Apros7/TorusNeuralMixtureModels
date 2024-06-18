@@ -23,20 +23,42 @@ if __name__ == "__main__":
     nodes = 3
     K = 3 # single model
     cv_runs = 10
-    nce_steps = 5000
 
-    estimation_method = NCE(
-        nodes = nodes, 
-        K = K, 
-        lr = 0.1, 
-        steps = nce_steps, 
-        return_log_prop_data = True)
+    fig, axs = plt.subplots(2, 2)
+    X, datamodel = sample_syndata_torusgraph(
+        nodes = nodes,
+        samples = N,
+        nModels = K,
+        fitFCM = False,
+        fitPAD = True,
+        fitPAS = False,
+        return_datamodel = True
+    )
 
-    torus_graph = TorusGraph(
-        nodes = nodes, 
-        samples = N,  
-        nModels = K, 
-        estimationMethod = estimation_method, 
-        return_datamodel = True)
+    axs = [x for ax in axs for x in ax]
 
-    torus_graph.visualize()
+    for i, steps in enumerate([500, 2000, 5000, 10000]):
+
+        estimation_method = NCE(
+            nodes = nodes, 
+            K = K, 
+            lr = 0.1, 
+            steps = steps, 
+            return_log_prop_data = True)
+
+        torus_graph = TorusGraph(
+            data = X,
+            nodes = nodes, 
+            samples = N,  
+            nModels = K, 
+            estimationMethod = estimation_method, 
+            return_datamodel = True)
+
+        torus_graph.visualize(
+            title = f"Dist of preds after {steps} NCE steps",
+            ax = axs[i],
+            show = False
+        )
+
+    plt.tight_layout()
+    plt.show()

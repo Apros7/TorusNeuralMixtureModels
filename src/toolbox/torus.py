@@ -69,6 +69,18 @@ class TorusGraph():
             else:
                 self.data = sample_syndata_torusgraph(nodes = nodes, samples = samples, nModels = nModels, return_datamodel = False)
             self.true_vals = syndata_true_labels(nModels = nModels, samples = samples)
+        
+        # Checking that data is as expected:
+        if self.data.shape[0] < self.data.shape[1]:
+            logging.warning("Your data is not the correct shape, so reshaping for you")
+            self.data = torch.from_numpy(self.data).float().T if isinstance(self.data, np.ndarray) else self.data.T
+        if samples != self.data.shape[0]:
+            logging.warning(f"The set number of samples is incorrect, most likely because you have more models, so changing it for you: Was {samples} should be {self.data.shape[0]}")
+            samples = self.data.shape[0]
+        if nModels != self.data.shape[1]:
+            logging.warning(f"The set number of nModels is incorrect, so changing it for you: Was {nModels} should be {self.data.shape[1]}")
+            nModels = self.data.shape[1]
+
         if self.TGInformation and self.TGInformation.samples:
             samples = self.TGInformation.samples
         if self.true_vals is None:
@@ -97,7 +109,7 @@ class TorusGraph():
         return accuracy_score(adjusted_pred_labels, self.true_vals)
         # return calc_NMI(pred_labels_ohe, self.true_vals)#, accuracy_score(pred_labels, self.true_vals)
 
-    def visualize(self):
+    def visualize(self, title = "Distribution of Predictions by Model", ax = None, show = True):
         adjusted_pred_labels = self.get_preds()
         distributions = {}
         for k in range(self.info["nModels"]):
@@ -106,8 +118,8 @@ class TorusGraph():
             print(preds_distribution)
             distributions[k] = [preds_distribution.get(i, 0) for i in range(self.info["nModels"])]
 
-        print(distributions)
-        fig, ax = plt.subplots()
+        if ax is None:
+            fig, ax = plt.subplots()
         x_values = list(distributions.keys())
         bar_width = 0.8 / self.info["nModels"]
         for i in range(self.info["nModels"]):
@@ -117,11 +129,13 @@ class TorusGraph():
         # Set x-axis labels
         ax.set_xticks([x + bar_width * (self.info["nModels"] - 1) / 2 for x in range(len(x_values))])
         ax.set_xticklabels(x_values)
-        ax.set_title("Distribution of Predictions by Model")
-        ax.set_xlabel("Model Index")
+        ax.set_title(title)
+        ax.set_xlabel("True value")
         ax.set_ylabel("Count")
         ax.legend()
-        plt.show()
+        if show:
+            plt.show()
+        return ax
 
     def get_preds(self):
         if not self.estimationMethod.return_log_prop_data:
