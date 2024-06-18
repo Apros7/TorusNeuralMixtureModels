@@ -77,9 +77,6 @@ class TorusGraph():
         if samples != self.data.shape[0]:
             logging.warning(f"The set number of samples is incorrect, most likely because you have more models, so changing it for you: Was {samples} should be {self.data.shape[0]}")
             samples = self.data.shape[0]
-        if nModels != self.data.shape[1]:
-            logging.warning(f"The set number of nModels is incorrect, so changing it for you: Was {nModels} should be {self.data.shape[1]}")
-            nModels = self.data.shape[1]
 
         if self.TGInformation and self.TGInformation.samples:
             samples = self.TGInformation.samples
