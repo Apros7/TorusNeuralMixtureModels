@@ -28,15 +28,18 @@ make nce_loss_tgmm:
 
 ## Real data
 
-make real_best_lr_nce_tgmm:
+real_best_lr_nce_tgmm:
+	cd $(MAIN_FOLDER) && python3 src/results/real_nce_lr_tgmm.py
+
+real_tgmm_boxplot:
+	cd $(MAIN_FOLDER) && python3 src/results/real_tgmm_boxplot.py
+
+real_tgmm_viz:
 	cd $(MAIN_FOLDER)
 
-make real_tgmm_boxplot:
-	cd $(MAIN_FOLDER)
+real_nce_loss:
+	cd $(MAIN_FOLDER) && python3 src/results/real_nce_loss_tgmm.py
 
-make real_tgmm_viz:
-	cd $(MAIN_FOLDER)
-
-make real_nce_loss_tgmm:
+real_nce_loss_fitting_tgmm:
 	cd $(MAIN_FOLDER)
 
