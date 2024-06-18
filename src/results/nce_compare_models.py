@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, '.')
 
 from src.parameterEstimation.trainNCE import mixture_torch_loop
-from src.parameterEstimation.NCE import TorusGraphs
+from src.parameterEstimation.NCE import NCE
 from src.data.synthetic_data import sampleFromTorusGraph
 from src.results.NMI import calc_NMI, calc_MI
 from sklearn.metrics import confusion_matrix
@@ -45,7 +45,7 @@ N = 2*N
 noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution, mellem 0 og 2*pi
 
 
-model = TorusGraphs(nodes=X.shape[1],K=2,return_log_prop_data=True)
+model = NCE(nodes=X.shape[1],K=2,return_log_prop_data=True)
 model,objective, log_prob_data = mixture_torch_loop(X,noise,model)
 theta,c = model.theta,model.logc
 # print(log_prob_data.shape) # (K,N)
