@@ -77,9 +77,6 @@ class TorusGraph():
         if samples != self.data.shape[0]:
             logging.warning(f"The set number of samples is incorrect, most likely because you have more models, so changing it for you: Was {samples} should be {self.data.shape[0]}")
             samples = self.data.shape[0]
-        if nModels != self.data.shape[1]:
-            logging.warning(f"The set number of nModels is incorrect, so changing it for you: Was {nModels} should be {self.data.shape[1]}")
-            nModels = self.data.shape[1]
 
         if self.TGInformation and self.TGInformation.samples:
             samples = self.TGInformation.samples
@@ -109,7 +106,7 @@ class TorusGraph():
         return accuracy_score(adjusted_pred_labels, self.true_vals)
         # return calc_NMI(pred_labels_ohe, self.true_vals)#, accuracy_score(pred_labels, self.true_vals)
 
-    def visualize(self, title = "Distribution of Predictions by Model", ax = None, show = True):
+    def visualize(self, title = "Distribution of Predictions by Model", ax = None, show = True, save_title = None):
         adjusted_pred_labels = self.get_preds()
         distributions = {}
         for k in range(self.info["nModels"]):
@@ -118,6 +115,7 @@ class TorusGraph():
             print(preds_distribution)
             distributions[k] = [preds_distribution.get(i, 0) for i in range(self.info["nModels"])]
 
+        plt.rcParams['font.family'] = 'Times New Roman'
         if ax is None:
             fig, ax = plt.subplots()
         x_values = list(distributions.keys())
@@ -134,6 +132,7 @@ class TorusGraph():
         ax.set_ylabel("Count")
         ax.legend()
         if show:
+            plt.savefig(save_title)
             plt.show()
         return ax
 

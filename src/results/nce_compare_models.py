@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, '.')
 
 from src.parameterEstimation.trainNCE import mixture_torch_loop
-from src.parameterEstimation.NCE import TorusGraphs
+from src.parameterEstimation.NCE import NCE
 from src.data.synthetic_data import sampleFromTorusGraph
 from src.results.NMI import calc_NMI, calc_MI
 from sklearn.metrics import confusion_matrix
@@ -45,7 +45,7 @@ N = 2*N
 noise = torch.rand(N,nodes)*2*torch.tensor(np.pi) # Noise distribution, mellem 0 og 2*pi
 
 
-model = TorusGraphs(nodes=X.shape[1],K=2,return_log_prop_data=True)
+model = NCE(nodes=X.shape[1],K=2,return_log_prop_data=True)
 model,objective, log_prob_data = mixture_torch_loop(X,noise,model)
 theta,c = model.theta,model.logc
 # print(log_prob_data.shape) # (K,N)
@@ -72,6 +72,8 @@ pred_labels = classify_points(model, X, log_prob_data, c).detach().numpy().resha
 true_labels = np.concatenate([np.ones(N//2),np.zeros(N//2)]).reshape(-1,1)
 
 con_matrix = confusion_matrix(true_labels,pred_labels)
+
+plt.rcParams['font.family'] = 'Times New Roman'
 sns.heatmap(con_matrix, annot=True)
 plt.title("Mixture model NCE with two components, class label distribution")
 plt.savefig("src/plots/mix_nce.png")
@@ -83,6 +85,7 @@ MI = calc_MI(true_labels,pred_labels)
 NMI = calc_NMI(true_labels,pred_labels)
 
 # Plot boxplot of NMI and MI
+plt.rcParams['font.family'] = 'Times New Roman'
 plt.boxplot([[NMI,1],[MI,1]])
 plt.xticks([1,2],["NMI","MI"])
 plt.title("NMI and MI for two components")

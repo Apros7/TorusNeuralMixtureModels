@@ -71,12 +71,12 @@ def cross_val_runs(cv_runs, N, nodes, phi, K, max_workers=None):
     # return dist_SMs, dist_NCEs
 
 def plot(dist_SMs, dist_NCEs):
+    plt.rcParams['font.family'] = 'Times New Roman'
     fig, ax = plt.subplots()
     boxplot_data = [dist_SMs, dist_NCEs]
     ax.boxplot(boxplot_data, patch_artist=True)
     ax.set_xticklabels(['SMs', 'NCEs'])
     ax.set_title('Boxplot of SMs and NCEs')
-    plt.show()
 
 if __name__ == "__main__":
     os.environ['DISABLE_TQDM'] = 'True'
@@ -89,10 +89,13 @@ if __name__ == "__main__":
     cv_runs = 10
 
     print(f"Estimated time: {10*cv_runs} sec")
-
+    
+    plt.rcParams['font.family'] = 'Times New Roman'
     phi = np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ])
     dist_SMs, dist_NCEs = cross_val_runs(cv_runs, N, nodes, phi, K)
     print(f"Time taken = {time.time() - start_time}")
     plot(dist_SMs, dist_NCEs)
+    plt.savefig('src/plots/sm_vs_nce_boxplot.png')
+    plt.show()
 
 
