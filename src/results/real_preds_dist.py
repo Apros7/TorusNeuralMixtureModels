@@ -3,6 +3,7 @@ sys.path.insert(0, '.')
 
 from src.toolbox import load_sample_data, TorusGraph, NCE, sample_syndata_torusgraph
 
+import matplotlib.pyplot as plt
 import os
 import time
 import numpy as np
@@ -43,4 +44,5 @@ if __name__ == "__main__":
         estimationMethod = estimation_method, 
         true_vals = true_vals)
 
-    torus_graph.visualize()
+    plt.rcParams['font.family'] = 'Times New Roman'
+    torus_graph.visualize(show=True, save_title='src/plots/real_preds_dist.png')

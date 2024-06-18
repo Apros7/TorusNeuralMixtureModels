@@ -59,12 +59,12 @@ def cross_val_runs(cv_runs, N, nodes, phi, K, steps_dict):
     return lr_dict
 
 def plot(lr_dict, title):
+    plt.rcParams['font.family'] = 'Times New Roman' 
     fig, ax = plt.subplots()
     boxplot_data = list(lr_dict.values())
     ax.boxplot(boxplot_data, patch_artist=True)
     ax.set_xticklabels(list(lr_dict.keys()))
     ax.set_title(title)
-    plt.show()
 
 if __name__ == "__main__":
     # os.environ['DISABLE_TQDM'] = 'True'
@@ -85,5 +85,7 @@ if __name__ == "__main__":
     print(f"Time taken = {time.time() - start_time}")
     print(steps_dict)
     plot(steps_dict, 'Boxplot of NCE estimation with varying steps')
+    plt.savefig('src/plots/NCE_syn_steps.png')
+    plt.show()
 
 

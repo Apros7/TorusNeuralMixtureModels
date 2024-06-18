@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 if __name__ == "__main__":
-    os.environ['DISABLE_TQDM'] = 'True'
+    os.environ['DISABLE_TQDM'] = 'False'
     start_time = time.time()
 
     N = 1000 # samples
@@ -48,8 +48,13 @@ if __name__ == "__main__":
             )
             losses_dict[K].append(nce.losses[-1])
     boxplot_data = list(losses_dict.values())
+
+    plt.rcParams['font.family'] = 'Times New Roman'
     fig, ax = plt.subplots()
+
     ax.boxplot(boxplot_data, patch_artist=True)
     ax.set_xticklabels(list(losses_dict.keys()))
-    # ax.title(f"NCE loss over nModels sampled on 3 torus graphs")
+
+    plt.title(f'Objective function over sets of (1,2,...K = {K}) models')
+    plt.savefig('src/plots/loss_over_models.png')
     plt.show()

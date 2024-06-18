@@ -106,7 +106,7 @@ class TorusGraph():
         return accuracy_score(adjusted_pred_labels, self.true_vals)
         # return calc_NMI(pred_labels_ohe, self.true_vals)#, accuracy_score(pred_labels, self.true_vals)
 
-    def visualize(self, title = "Distribution of Predictions by Model", ax = None, show = True):
+    def visualize(self, title = "Distribution of Predictions by Model", ax = None, show = True, save_title = None):
         adjusted_pred_labels = self.get_preds()
         distributions = {}
         for k in range(self.info["nModels"]):
@@ -115,6 +115,7 @@ class TorusGraph():
             print(preds_distribution)
             distributions[k] = [preds_distribution.get(i, 0) for i in range(self.info["nModels"])]
 
+        plt.rcParams['font.family'] = 'Times New Roman'
         if ax is None:
             fig, ax = plt.subplots()
         x_values = list(distributions.keys())
@@ -131,6 +132,7 @@ class TorusGraph():
         ax.set_ylabel("Count")
         ax.legend()
         if show:
+            plt.savefig(save_title)
             plt.show()
         return ax
 

@@ -24,8 +24,10 @@ if __name__ == "__main__":
         nModels = K,
         estimationMethod = nce,
     )
+    plt.rcParams['font.family'] = 'Times New Roman'
     plt.plot(nce.losses)
-    plt.title(f"NCE loss over {nce_steps} steps with lr = {lr} for a single torus graph")
+    plt.title(f"NCE objective over {nce_steps} steps with lr = {lr} for a single torus graph")
+    plt.savefig('src/plots/nce_loss_tg.png')
     plt.show()
 
 
