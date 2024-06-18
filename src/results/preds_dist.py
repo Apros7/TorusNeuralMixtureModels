@@ -24,6 +24,7 @@ if __name__ == "__main__":
     K = 3 # single model
     cv_runs = 10
 
+    plt.rcParams['font.family'] = 'Times New Roman'
     fig, axs = plt.subplots(2, 2)
     X, datamodel = sample_syndata_torusgraph(
         nodes = nodes,
@@ -59,7 +60,7 @@ if __name__ == "__main__":
             ax = axs[i],
             show = False
         )
-    plt.rcParams['font.family'] = 'Times New Roman'
+        
     plt.tight_layout()
     plt.savefig('src/plots/syn_preds_dist.png')
     plt.show()
