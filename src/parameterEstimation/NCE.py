@@ -105,7 +105,6 @@ class NCE(nn.Module):
             sinx = torch.sin(X[:,self.triu_indices[0,z]] - X[:,self.triu_indices[1,z]])
             log_prob_data = self.theta[:,:,z]@torch.stack([cosx,sinx],dim=0)
 
-
             cosn = torch.cos(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])
             sinn = torch.sin(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])
             log_prob_noise = self.theta[:,:,z]@torch.stack([cosn,sinn],dim=0)
