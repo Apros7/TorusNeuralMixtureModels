@@ -32,6 +32,8 @@ if __name__ == "__main__":
     data, true_vals = load_sample_data()
     data = torch.from_numpy(data).float()
     phi = None
-    lr_dict = cross_val_runs(cv_runs, N, nodes, phi, K, lr_dict, nce_steps, X = data, true_vals = true_vals)
+    lr_dict = cross_val_runs(cv_runs, N, nodes, phi, K, lr_dict, nce_steps)
     print(f"Time taken = {time.time() - start_time}")
     plot(lr_dict, 'Boxplot of NCE estimation with varying learning rate on Mixture model')
+    plt.savefig('src/plots/real_NCE_lr_tgmm.png')
+    plt.show()

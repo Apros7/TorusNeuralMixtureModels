@@ -35,6 +35,8 @@ if __name__ == "__main__":
         torus_graph = TorusGraph(nodes = data.shape[1], samples = data.shape[0], data = data, nModels = K, estimationMethod = estimation_method, true_vals = true_vals)
         accuracies.append(torus_graph.evaluate())
     print(f"Time taken = {time.time() - start_time}")
+    plt.rcParams['font.family'] = 'Times New Roman'
     plt.boxplot(accuracies, patch_artist=True)
     plt.title(f'Boxplot of acc on real data with learning rate = {lr} over {cv_runs} runs on Mixture model')
+    plt.savefig('src/plots/real_tgmm_boxplot.png')
     plt.show()

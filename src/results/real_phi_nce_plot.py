@@ -99,6 +99,7 @@ if __name__ == "__main__":
     theta = estimation_method.theta
 
     Ps = get_phi_corr(theta)
+    plt.rcParams['font.family'] = 'Times New Roman'
 
     plt.figure(figsize=(16,4))
     plt.subplot(1,3,1)

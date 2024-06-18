@@ -32,6 +32,8 @@ if __name__ == "__main__":
     estimation_method = NCE(nodes = data.shape[1], K = K, lr = lr, steps = nce_steps, return_log_prop_data = True)
     torus_graph = TorusGraph(nodes = data.shape[1], samples = data.shape[0], data = data, nModels = K, estimationMethod = estimation_method, true_vals = true_vals)
     print(f"Time taken = {time.time() - start_time}")
+    plt.rcParams['font.family'] = 'Times New Roman'
     plt.plot(estimation_method.losses)
     plt.title(f'NCE loss for learning rate = {lr} on Mixture model with real data')
+    plt.savefig('src/plots/real_nce_loss_tgmm.png')
     plt.show()

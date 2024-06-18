@@ -4,7 +4,7 @@ sys.path.insert(0, '.')
 
 from src.results.NCE_lr import plot, cross_val_runs
 import time
-import os
+import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
@@ -27,5 +27,7 @@ if __name__ == "__main__":
     print(f"Time taken = {time.time() - start_time}")
     # print(lr_dict)
     plot(lr_dict, 'Boxplot of NCE estimation with varying learning rate on Mixture model')
+    plt.savefig('src/plots/syn_NCE_lr_tgmm.png')
+    plt.show()
 
 

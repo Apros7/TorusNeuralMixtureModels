@@ -20,7 +20,8 @@ def plot_nce_vs_sm(X,nodes, K, datamodel, N):
       data = X,
       samples = N,
       nModels = K,
-      TGInformation = datamodel
+      TGInformation = datamodel,
+      return_datamodel=True
    )
    phi = sm_tg.estimationMethod.phi
 
@@ -28,19 +29,20 @@ def plot_nce_vs_sm(X,nodes, K, datamodel, N):
       nodes = nodes,
       K = K
    )
-   nce_tg = TorusGraph(
-      nodes = nodes,
-      data = X,
-      samples = N,
-      nModels = K,
-      TGInformation = datamodel,
-      estimationMethod = nce
-   )
+   # nce_tg = TorusGraph(
+   #    nodes = nodes,
+   #    data = X,
+   #    samples = N,
+   #    nModels = K,
+   #    TGInformation = datamodel,
+   #    estimationMethod = nce
+   # )
    theta = nce.theta.detach().numpy()
 
    min_val = min(theta.min(), phi.min())
    max_val = max(theta.max(), phi.max())
-
+   
+   plt.rcParams['font.family'] = 'Times New Roman'
    plt.figure(figsize=(10,7))
 
    plt.subplot(1,2,1)
@@ -64,7 +66,7 @@ def plot_nce_vs_sm(X,nodes, K, datamodel, N):
 
 
 if __name__ == "__main__":
-   N = 100 # samples
+   N = 1000 # samples
    nodes = 3
    K = 1 # number of models (or components)
    phi = [np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ])]

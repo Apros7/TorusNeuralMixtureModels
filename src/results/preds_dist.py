@@ -59,6 +59,7 @@ if __name__ == "__main__":
             ax = axs[i],
             show = False
         )
-
+    plt.rcParams['font.family'] = 'Times New Roman'
     plt.tight_layout()
+    plt.savefig('src/plots/syn_preds_dist.png')
     plt.show()

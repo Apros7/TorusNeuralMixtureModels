@@ -72,6 +72,8 @@ pred_labels = classify_points(model, X, log_prob_data, c).detach().numpy().resha
 true_labels = np.concatenate([np.ones(N//2),np.zeros(N//2)]).reshape(-1,1)
 
 con_matrix = confusion_matrix(true_labels,pred_labels)
+
+plt.rcParams['font.family'] = 'Times New Roman'
 sns.heatmap(con_matrix, annot=True)
 plt.title("Mixture model NCE with two components, class label distribution")
 plt.savefig("src/plots/mix_nce.png")
@@ -83,6 +85,7 @@ MI = calc_MI(true_labels,pred_labels)
 NMI = calc_NMI(true_labels,pred_labels)
 
 # Plot boxplot of NMI and MI
+plt.rcParams['font.family'] = 'Times New Roman'
 plt.boxplot([[NMI,1],[MI,1]])
 plt.xticks([1,2],["NMI","MI"])
 plt.title("NMI and MI for two components")

@@ -120,6 +120,7 @@ if __name__ == "__main__":
 
     Ps = get_phi_corr(theta, K)
 
+    plt.rcParams['font.family'] = 'Times New Roman'
     plt.figure(figsize=(16,4))
     plt.subplot(1,3,1)
     plot = sns.heatmap(Ps[0])
@@ -138,7 +139,8 @@ if __name__ == "__main__":
 
     # Doing it for the true phi:
     true_phis = get_true_phi(phi, K)
-
+    
+    plt.rcParams['font.family'] = 'Times New Roman'
     plt.figure(figsize=(16,4))
     plt.subplot(1,3,1)
     plot = sns.heatmap(true_phis[0])
