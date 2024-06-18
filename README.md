@@ -45,24 +45,29 @@ See the NCE loss over time when estimating parameters
 make nce_loss
 ```
 
-See the NCE loss over the amount of fitting torus graphs **MISSING**
+See the NCE loss over the amount of fitting torus graphs
 ```
 make nce_loss_tgmm
 ```
 
+See the distribution of classes on TGMM components
+```
+make see_preds_data
+```
+
 **on real data**
 
-Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Model on real data **MISSING**
+Find the best learning rate for the NCE algorithm using a Torus Graph Mixture Model on real data 
 ```
 make real_best_lr_nce_tgmm:
 ```
 
-Quantify the differens in output class between true output and TGMM **MISSING**
+Quantify the differens in output class between true output and TGMM
 ```
 make real_tgmm_boxplot
 ```
 
-Visualize phi for a single Torus Graph using TGMM NCE **MISSING**
+Visualize phi for a single Torus Graph using TGMM NCE 
 ```
 make real_tgmm_viz
 ```
@@ -70,6 +75,11 @@ make real_tgmm_viz
 Estimate NCE loss over the amount of fitting torus graphs **MISSING**
 ```
 make real_nce_loss_tgmm
+```
+
+See the distribution of classes on TGMM components
+```
+make real_see_preds_data
 ```
 
 ## Toolbox

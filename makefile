@@ -8,23 +8,26 @@ install:
 
 ## Synthetic data:
 
-make best_lr_nce_tg:
+best_lr_nce_tg:
 	cd $(MAIN_FOLDER) && python3 src/results/NCE_lr.py
 
-make best_lr_nce_tgmm:
+best_lr_nce_tgmm:
 	cd $(MAIN_FOLDER) && python3 src/results/NCE_lr_tgmm.py
 
-make sm_vs_nce_viz:
+sm_vs_nce_viz:
 	cd $(MAIN_FOLDER) && python3 src/results/sm_vs_nce_viz.py
 
-make sm_vs_nce_boxplot:
+sm_vs_nce_boxplot:
 	cd $(MAIN_FOLDER) && python3 src/results/sm_vs_nce_boxplot.py
 
-make nce_loss:
+nce_loss:
 	cd $(MAIN_FOLDER) && python3 src/results/see_nce_loss.py
 
-make nce_loss_tgmm:
-	cd $(MAIN_FOLDER) && 
+nce_loss_tgmm:
+	cd $(MAIN_FOLDER) && python3 src/results/loss_over_time.py
+
+see_preds_dist:
+	cd $(MAIN_FOLDER) && python3 src/results/preds_dist.py
 
 ## Real data
 
@@ -35,11 +38,14 @@ real_tgmm_boxplot:
 	cd $(MAIN_FOLDER) && python3 src/results/real_tgmm_boxplot.py
 
 real_tgmm_viz:
-	cd $(MAIN_FOLDER)
+	cd $(MAIN_FOLDER) && python3 src/results/real_phi_nce_plot.py
 
 real_nce_loss:
 	cd $(MAIN_FOLDER) && python3 src/results/real_nce_loss_tgmm.py
 
 real_nce_loss_fitting_tgmm:
 	cd $(MAIN_FOLDER)
+
+real_see_preds_dist:
+	cd $(MAIN_FOLDER) && python3 src/results/real_preds_dist.py
 
