@@ -115,7 +115,7 @@ if __name__ == "__main__":
     Ps = get_phi_corr(theta, K)
 
     min_val = 0
-    max_val = 1.5
+    max_val = 1
    
     plt.rcParams['font.family'] = 'Times New Roman'
     plt.figure(figsize=(16,4))
