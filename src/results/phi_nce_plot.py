@@ -143,20 +143,14 @@ if __name__ == "__main__":
 
     Ps = get_phi_corr(theta, K)
 
-    # min_val = 0
-    # max_val = 1.5
-
-    print(*Ps, sep="\n")
-
-    stats = [correlation_matrix_to_p_values(p, 1000) for p in Ps]
-
-    print(*stats, sep="\n")
+    min_val = 0
+    max_val = 1
    
-    # plt.rcParams['font.family'] = 'Times New Roman'
-    # plt.figure(figsize=(16,4))
-    # plt.subplot(1,3,1)
-    # plot = sns.heatmap(stats[0])#, vmin=min_val, vmax=max_val)
-    # plt.title('Component 1')
+    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.figure(figsize=(16,4))
+    plt.subplot(1,3,1)
+    plot = sns.heatmap(Ps[0], vmin=min_val, vmax=max_val)
+    plt.title('Component 1')
 
     # plt.subplot(1,3,2)
     # plot = sns.heatmap(stats[1])#, vmin=min_val, vmax=max_val)
