@@ -63,11 +63,11 @@ if __name__ == "__main__":
     # os.environ['DISABLE_TQDM'] = 'True'
     start_time = time.time()
 
-    N = 1000 # samples
+    N = 10 # samples
     nodes = 3
     K = 3 
-    cv_runs = 10
-    nce_steps = 5000
+    cv_runs = 1
+    nce_steps = 10
 
     lrs_to_test = [10, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
     lr_dict = {lr: [] for lr in lrs_to_test}
@@ -93,30 +93,31 @@ if __name__ == "__main__":
     #value = torus_graph.evaluate()
 
     theta = estimation_method.theta
-
-    min_val = 0
-    max_val = 1
-
     Ps = get_phi_corr(theta)
-    plt.rcParams['font.family'] = 'Times New Roman'
 
-    plt.figure(figsize=(16,4))
+    l = np.concatenate((Ps[0].flatten(), Ps[1].flatten(), Ps[2].flatten()))
+    max_val = np.max(l)
+    min_val = np.min(l)
+    print(f'Min: {min}, Max: {max}')
+
+    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.figure(figsize=(22,5))
     plt.subplot(1,3,1)
     plot = sns.heatmap(Ps[0], vmin=min_val, vmax=max_val)
-    plot.set_xticklabels(['1','2','3','4','5','6','7'])
-    plot.set_yticklabels(['1','2','3','4','5','6','7'])
+    plt.xticks(ticks=np.arange(7) + 0.5, labels=['Visual', 'Somato-Motor','Dorsal Attention','Ventral Attention','Limbic','Control','Default'], rotation=50)
+    plt.yticks(ticks=np.arange(7) + 0.5, labels=['Visual', 'Somato-Motor','Dorsal Attention','Ventral Attention','Limbic','Control','Default'], rotation=0)
     plt.title('Component 1')
 
     plt.subplot(1,3,2)
     plot = sns.heatmap(Ps[1], vmin=min_val, vmax=max_val)
-    plot.set_xticklabels(['1','2','3','4','5','6','7'])
-    plot.set_yticklabels(['1','2','3','4','5','6','7'])
+    plt.xticks(ticks=np.arange(7) + 0.5, labels=['Visual', 'Somato-Motor','Dorsal Attention','Ventral Attention','Limbic','Control','Default'], rotation=50)
+    plt.yticks(ticks=np.arange(7) + 0.5, labels=['Visual', 'Somato-Motor','Dorsal Attention','Ventral Attention','Limbic','Control','Default'], rotation=0)
     plt.title('Component 2')
 
     plt.subplot(1,3,3)
     plot = sns.heatmap(Ps[2], vmin=min_val, vmax=max_val)
-    plot.set_xticklabels(['1','2','3','4','5','6','7'])
-    plot.set_yticklabels(['1','2','3','4','5','6','7'])
+    plt.xticks(ticks=np.arange(7) + 0.5, labels=['Visual', 'Somato-Motor','Dorsal Attention','Ventral Attention','Limbic','Control','Default'], rotation=50)
+    plt.yticks(ticks=np.arange(7) + 0.5, labels=['Visual', 'Somato-Motor','Dorsal Attention','Ventral Attention','Limbic','Control','Default'], rotation=0)
     plt.title('Component 3')
     plt.savefig('src/plots/real_data_phi_heatmap.png')
     plt.show()
