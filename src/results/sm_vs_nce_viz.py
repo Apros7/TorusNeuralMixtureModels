@@ -11,7 +11,7 @@ sys.path.insert(0, '.')
 # from src.parameterEstimation.NCE import NCE
 # from src.data.synthetic_data import sampleFromTorusGraph
 # from src.parameterEstimation.scoreMatching import SM
-from src.toolbox import TorusGraph, sample_syndata_torusgraph, NCE
+from src.toolbox import TorusGraph, sample_syndata_torusgraph, NCE, SM
 
   
 def plot_nce_vs_sm(X,nodes, K, datamodel, N):
@@ -21,13 +21,19 @@ def plot_nce_vs_sm(X,nodes, K, datamodel, N):
       samples = N,
       nModels = K,
       TGInformation = datamodel,
-      return_datamodel=True
+      return_datamodel=True,
+      estimationMethod=SM(
+         X = X,
+         dm = datamodel
+      )
    )
    phi = sm_tg.estimationMethod.phi
 
    nce = NCE(
       nodes = nodes,
-      K = K
+      K = K,
+      lr = 1,
+      steps = 500
    )
    # nce_tg = TorusGraph(
    #    nodes = nodes,
@@ -48,18 +54,18 @@ def plot_nce_vs_sm(X,nodes, K, datamodel, N):
    plt.subplot(1,2,1)
    plt.imshow(theta[0,:,:], vmin=min_val, vmax=max_val)
    plt.colorbar()
-   plt.title("Theta, NCE")
+   plt.title("Phi, NCE")
    plt.xlabel("Dimension")
    plt.ylabel("Model")
 
    plt.subplot(1,2,2)
    plt.imshow(phi.reshape(2,3), vmin=min_val, vmax=max_val)
    plt.colorbar()
-   plt.title("Theta, score matching")
+   plt.title("Phi, score matching")
    plt.xlabel("Dimension")
    plt.ylabel("Model")
 
-   plt.suptitle("Theta, NCE vs SM with 1 model")
+   plt.suptitle("Phi, NCE vs SM with 1 model")
    logging.info("Saving the plot at: src/plots/plot_sm_vs_nce.png")
    plt.savefig('src/plots/plot_sm_vs_nce.png')
    plt.show()

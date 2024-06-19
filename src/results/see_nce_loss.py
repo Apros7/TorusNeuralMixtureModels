@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     N = 1000 # samples
     nodes = 3
-    K = 1 # single model
-    nce_steps = 2000
-    lr = 0.1
+    K = 3 # single model
+    nce_steps = 1000
+    lr = 0.05
 
     nce = NCE(
         nodes = nodes,
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     plt.rcParams['font.family'] = 'Times New Roman'
     plt.plot(nce.losses)
-    plt.title(f"NCE objective over {nce_steps} steps with lr = {lr} for a single torus graph")
+    plt.title(f"NCE loss for lr = {lr} for a mixture model on synthetic data")
     plt.savefig('src/plots/nce_loss_tg.png')
     plt.show()
 

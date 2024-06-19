@@ -10,6 +10,7 @@ import seaborn as sns
 import scipy
 import time
 from src.parameterEstimation.NCE import NCE
+from scipy.stats import t
 
 
 def get_alpha_beta(theta, K):
@@ -24,7 +25,7 @@ def get_alpha_beta(theta, K):
     n = nodes
     idx = torch.triu_indices(n,n,1)
     alpha = [np.zeros((n,n)) for i in range(K)]
-    beta = alpha
+    beta = [np.zeros((n,n)) for i in range(K)]
     for component in np.arange(0,K):
         for j in np.arange(0,idx.shape[1]):
             alpha[component][idx[0,j],idx[1,j]] = theta[component][0][j]
@@ -83,6 +84,34 @@ def get_true_phi(phi, K):
                 P[component][row,col] = I1(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2)) / I0(np.sqrt(alpha[component][row,col]**2 + beta[component][row,col]**2))
     return P
 
+def correlation_matrix_to_p_values(correlation_matrix, n):
+    # Number of observations (sample size)
+    assert n > 2, "Sample size must be greater than 2 to calculate p-values."
+    
+    # Degrees of freedom
+    df = n - 2
+    
+    # Initialize the p-value matrix with the same shape as the correlation matrix
+    p_value_matrix = np.zeros_like(correlation_matrix)
+    
+    # Iterate through the matrix to compute p-values
+    for i in range(correlation_matrix.shape[0]):
+        for j in range(correlation_matrix.shape[1]):
+            if i == j:
+                p_value_matrix[i, j] = 0  # The p-value of the diagonal elements is 0
+            else:
+                r = correlation_matrix[i, j]
+                t_stat = r * np.sqrt(df / (1 - r**2))
+                p_value = 2 * (1 - t.cdf(np.abs(t_stat), df))  # Two-tailed p-value
+                p_value_matrix[i, j] = p_value
+                # if p_value < 0.005:
+                #     p_value_matrix[i, j] = 1
+                # elif p_value < 0.05:
+                #     p_value_matrix[i, j] = 0.5
+                # else:
+                #     p_value_matrix[i, j] = 0
+    
+    return p_value_matrix
 
 if __name__ == "__main__":
 
@@ -92,8 +121,8 @@ if __name__ == "__main__":
     N = 1000 # samples
     nodes = 3
     K = 3 # single model
-    nce_steps = 5000
-    lr = 0.1
+    nce_steps = 1000
+    lr = 0.05
 
     nce = NCE(
         nodes = nodes,
@@ -123,34 +152,34 @@ if __name__ == "__main__":
     plot = sns.heatmap(Ps[0], vmin=min_val, vmax=max_val)
     plt.title('Component 1')
 
-    plt.subplot(1,3,2)
-    plot = sns.heatmap(Ps[1], vmin=min_val, vmax=max_val)
-    plt.title('Component 2')
+    # plt.subplot(1,3,2)
+    # plot = sns.heatmap(stats[1])#, vmin=min_val, vmax=max_val)
+    # plt.title('Component 2')
 
-    plt.subplot(1,3,3)
-    plot = sns.heatmap(Ps[2], vmin=min_val, vmax=max_val)
-    plt.title('Component 3')
+    # plt.subplot(1,3,3)
+    # plot = sns.heatmap(stats[2])#, vmin=min_val, vmax=max_val)
+    # plt.title('Component 3')
 
-    plt.savefig('src/plots/syn_data_phi_heatmap.png')
-    plt.show()
+    # plt.savefig('src/plots/syn_data_phi_heatmap.png')
+    # plt.show()
 
-    # Doing it for the true phi:
-    true_phis = get_true_phi(phi, K)
+    # # Doing it for the true phi:
+    # true_phis = get_true_phi(phi, K)
     
-    plt.rcParams['font.family'] = 'Times New Roman'
-    plt.figure(figsize=(16,4))
-    plt.subplot(1,3,1)
-    plot = sns.heatmap(true_phis[0], vmin=min_val, vmax=max_val)
-    plt.title('Component 1')
+    # plt.rcParams['font.family'] = 'Times New Roman'
+    # plt.figure(figsize=(16,4))
+    # plt.subplot(1,3,1)
+    # plot = sns.heatmap(true_phis[0])#, vmin=min_val, vmax=max_val)
+    # plt.title('Component 1')
 
-    plt.subplot(1,3,2)
-    plot = sns.heatmap(true_phis[1], vmin=min_val, vmax=max_val)
-    plt.title('Component 2')
+    # plt.subplot(1,3,2)
+    # plot = sns.heatmap(true_phis[1])#, vmin=min_val, vmax=max_val)
+    # plt.title('Component 2')
 
-    plt.subplot(1,3,3)
-    plot = sns.heatmap(true_phis[2], vmin = min_val, vmax = max_val)
-    plt.title('Component 3')
+    # plt.subplot(1,3,3)
+    # plot = sns.heatmap(true_phis[2])#, vmin = min_val, vmax = max_val)
+    # plt.title('Component 3')
 
-    plt.savefig('src/plots/true_phi.png')
-    plt.show()
+    # plt.savefig('src/plots/true_phi.png')
+    # plt.show()
     

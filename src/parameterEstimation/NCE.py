@@ -7,7 +7,7 @@ import os
 import numpy as np
 
 class NCE(nn.Module):
-    def __init__(self, nodes:int, K:int, return_log_prop_data: bool = False, steps: int = 2000, lr: float = 0.5):
+    def __init__(self, nodes:int, K:int, return_log_prop_data: bool = False, steps: int = 1000, lr: float = 0.05):
         '''
         nodes: number of nodes
         K: number of models (or components) 

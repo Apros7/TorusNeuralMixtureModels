@@ -106,7 +106,7 @@ class TorusGraph():
         return calc_NMI(ohe_true_vals, normalized_log_probs)
 
     def visualize(self, title = "Distribution of Predictions by Model", ax = None, show = True, save_title = None):
-        adjusted_pred_labels = self.get_preds()
+        adjusted_pred_labels = self.get_preds(adjust = False)
         distributions = {}
         for k in range(self.info["nModels"]):
             preds_for_k_idx = np.where(adjusted_pred_labels == k)
@@ -121,13 +121,13 @@ class TorusGraph():
         bar_width = 0.8 / self.info["nModels"]
         for i in range(self.info["nModels"]):
             bars = [distributions[k][i] for k in x_values]
-            ax.bar([x + i * bar_width for x in range(len(x_values))], bars, bar_width, label=f"Model {i}")
+            ax.bar([x + i * bar_width for x in range(len(x_values))], bars, bar_width, label=f"True value = {i}")
 
         # Set x-axis labels
         ax.set_xticks([x + bar_width * (self.info["nModels"] - 1) / 2 for x in range(len(x_values))])
         ax.set_xticklabels(x_values)
         ax.set_title(title)
-        ax.set_xlabel("True value")
+        ax.set_xlabel("Predicted value")
         ax.set_ylabel("Count")
         ax.legend()
         if show:
@@ -135,15 +135,14 @@ class TorusGraph():
             plt.show()
         return ax
 
-    def get_preds(self):
+    def get_preds(self, adjust = True):
         if not self.estimationMethod.return_log_prop_data:
             raise NotImplementedError("You need to set return log prop data to True in your estimation method")
         if self.true_vals is None:
             raise NotImplementedError("You need to set true vals before being able to run eval")
         pred_labels = classify_points(self.estimationMethod, self.estimationMethod.log_prop_data, self.info["samples"]).detach().numpy()
-        print(pred_labels.shape, self.true_vals.shape)
         adjusted_pred_labels = adjust_pred_labels(pred_labels, self.info["nModels"], self.true_vals)
-        return adjusted_pred_labels
+        return adjusted_pred_labels if adjust else pred_labels
 
 
 
