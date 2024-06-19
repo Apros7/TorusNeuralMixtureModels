@@ -1,15 +1,11 @@
 import sys
-
-import scipy.special
 sys.path.insert(0, '.')
-
-from src.toolbox import load_sample_data, TorusGraph, NCE, sample_syndata_torusgraph
+from src.toolbox import load_sample_data, TorusGraph, NCE
 import time
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
 import scipy
 import time
 
