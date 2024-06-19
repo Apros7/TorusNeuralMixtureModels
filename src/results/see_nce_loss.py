@@ -16,14 +16,17 @@ if __name__ == "__main__":
         nodes = nodes,
         K = K,
         steps = nce_steps,
-        lr = lr
+        lr = lr,
+        return_log_prop_data = True
     )
-    TorusGraph(
+    tg = TorusGraph(
         nodes = nodes,
         samples = N,
         nModels = K,
         estimationMethod = nce,
+        return_datamodel = True
     )
+
     plt.rcParams['font.family'] = 'Times New Roman'
     plt.plot(nce.losses)
     plt.title(f"NCE objective over {nce_steps} steps with lr = {lr} for a single torus graph")

@@ -24,6 +24,7 @@ def calc_NMI(Z1,Z2):
 
 
 def compute_log_probs(estimationMethod, log_prob_data, samples):
+    log_prob_data = torch.tensor(log_prob_data)
     denominator = torch.sum(torch.exp(log_prob_data + estimationMethod.logc.view(-1,1)), dim=0)
     z = torch.zeros(estimationMethod.K, samples)
     for k in range(estimationMethod.K):
