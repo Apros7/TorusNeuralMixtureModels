@@ -121,16 +121,16 @@ if __name__ == "__main__":
     phi = np.block([ 0, 0, 8*np.cos(np.pi), 8*np.sin(np.pi), 0, 0 ])
     dist_SMs, dist_NCEs, phiSMS, thetas, dist_SM_abss, dist_NCE_abss = cross_val_runs(cv_runs, N, nodes, phi, K)
     print(f"Time taken = {time.time() - start_time}")
-    # plot(dist_SMs, dist_NCEs)
-    # plt.savefig('src/plots/sm_vs_nce_boxplot.png')
-    # plt.show()
+    plot(dist_SMs, dist_NCEs)
+    plt.savefig('src/plots/sm_vs_nce_boxplot.png')
+    plt.show()
 
-    # plot2(phiSMS, thetas)
-    # plt.savefig('src/plots/sm_vs_nce_boxplot2.png')
-    # plt.show()
+    plot2(phiSMS, thetas)
+    plt.savefig('src/plots/sm_vs_nce_boxplot2.png')
+    plt.show()
 
-    # plot1(dist_SM_abss, dist_NCE_abss)
-    # plt.show()
+    plot1(dist_SM_abss, dist_NCE_abss)
+    plt.show()
 
 #pvalue for models distance being different from each other
     pvalue_dists = wilcoxon(dist_SMs, dist_NCEs)
