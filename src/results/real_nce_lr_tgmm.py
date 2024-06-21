@@ -1,17 +1,10 @@
 import sys
 sys.path.insert(0, '.')
-
-from src.toolbox import load_sample_data, TorusGraph, NCE, sample_syndata_torusgraph
+from src.toolbox import load_sample_data
 from src.results.NCE_lr import cross_val_runs, plot
-
-import os
 import time
-import numpy as np
 import torch
 import matplotlib.pyplot as plt
-import concurrent.futures
-import os
-from tqdm import tqdm
 import time
 
 

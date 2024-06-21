@@ -1,17 +1,8 @@
 import sys
 sys.path.insert(0, '.')
-
-from src.toolbox import load_sample_data, TorusGraph, NCE, sample_syndata_torusgraph
-
+from src.toolbox import load_sample_data, TorusGraph, NCE
 import matplotlib.pyplot as plt
-import os
-import time
-import numpy as np
 import torch
-import matplotlib.pyplot as plt
-import concurrent.futures
-import os
-from tqdm import tqdm
 import time
 
 
@@ -24,7 +15,7 @@ if __name__ == "__main__":
     nodes = 3
     K = 3 # single model
     cv_runs = 10
-    nce_steps = 5000
+    nce_steps = 1000
 
     data, true_vals = load_sample_data()
     data = torch.from_numpy(data).float()
@@ -32,7 +23,7 @@ if __name__ == "__main__":
     estimation_method = NCE(
         nodes = data.shape[1], 
         K = K, 
-        lr = 0.1, 
+        lr = 0.05, 
         steps = nce_steps, 
         return_log_prop_data = True)
 

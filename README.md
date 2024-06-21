@@ -72,7 +72,7 @@ Visualize phi for a single Torus Graph using TGMM NCE
 make real_tgmm_viz
 ```
 
-Estimate NCE loss over the amount of fitting torus graphs **MISSING**
+Estimate NCE loss over the amount of fitting torus graphs
 ```
 make real_nce_loss_tgmm
 ```

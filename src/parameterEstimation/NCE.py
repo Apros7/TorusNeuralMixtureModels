@@ -7,7 +7,7 @@ import os
 import numpy as np
 
 class NCE(nn.Module):
-    def __init__(self, nodes:int, K:int, return_log_prop_data: bool = False, steps: int = 2000, lr: float = 0.5):
+    def __init__(self, nodes:int, K:int, return_log_prop_data: bool = False, steps: int = 1000, lr: float = 0.05):
         '''
         nodes: number of nodes
         K: number of models (or components) 
@@ -104,7 +104,6 @@ class NCE(nn.Module):
             cosx = torch.cos(X[:,self.triu_indices[0,z]] - X[:,self.triu_indices[1,z]])
             sinx = torch.sin(X[:,self.triu_indices[0,z]] - X[:,self.triu_indices[1,z]])
             log_prob_data = self.theta[:,:,z]@torch.stack([cosx,sinx],dim=0)
-
 
             cosn = torch.cos(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])
             sinn = torch.sin(noise[:,self.triu_indices[0,z]] - noise[:,self.triu_indices[1,z]])

@@ -1,17 +1,9 @@
-
 import sys
 sys.path.insert(0, '.')
-
 from src.toolbox import load_sample_data, TorusGraph, NCE
-
-import os
 import time
-import numpy as np
 import torch
 import matplotlib.pyplot as plt
-import concurrent.futures
-import os
-from tqdm import tqdm
 import time
 
 
@@ -25,7 +17,7 @@ if __name__ == "__main__":
     K = 3 # single model
     cv_runs = 2
     nce_steps = 2000
-    lr = 0.1
+    lr = 0.05
 
     data, true_vals = load_sample_data()
     data = torch.from_numpy(data).float()

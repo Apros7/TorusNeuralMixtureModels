@@ -1,15 +1,11 @@
 import sys
-
-import scipy.special
 sys.path.insert(0, '.')
-
-from src.toolbox import load_sample_data, TorusGraph, NCE, sample_syndata_torusgraph
+from src.toolbox import load_sample_data, TorusGraph, NCE
 import time
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
 import scipy
 import time
 
@@ -94,28 +90,31 @@ if __name__ == "__main__":
         estimationMethod = estimation_method, 
         true_vals = true_vals)
 
-    value = torus_graph.evaluate()
+    #value = torus_graph.evaluate()
 
     theta = estimation_method.theta
+
+    min_val = 0
+    max_val = 1
 
     Ps = get_phi_corr(theta)
     plt.rcParams['font.family'] = 'Times New Roman'
 
     plt.figure(figsize=(16,4))
     plt.subplot(1,3,1)
-    plot = sns.heatmap(Ps[0])
+    plot = sns.heatmap(Ps[0], vmin=min_val, vmax=max_val)
     plot.set_xticklabels(['1','2','3','4','5','6','7'])
     plot.set_yticklabels(['1','2','3','4','5','6','7'])
     plt.title('Component 1')
 
     plt.subplot(1,3,2)
-    plot = sns.heatmap(Ps[1])
+    plot = sns.heatmap(Ps[1], vmin=min_val, vmax=max_val)
     plot.set_xticklabels(['1','2','3','4','5','6','7'])
     plot.set_yticklabels(['1','2','3','4','5','6','7'])
     plt.title('Component 2')
 
     plt.subplot(1,3,3)
-    plot = sns.heatmap(Ps[2])
+    plot = sns.heatmap(Ps[2], vmin=min_val, vmax=max_val)
     plot.set_xticklabels(['1','2','3','4','5','6','7'])
     plot.set_yticklabels(['1','2','3','4','5','6','7'])
     plt.title('Component 3')

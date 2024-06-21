@@ -2,8 +2,7 @@
 import sys
 sys.path.insert(0, '.')
 
-from src.toolbox import TorusGraph, NCE, SM, sample_syndata_torusgraph, TorusGraphInformation
-
+from src.toolbox import TorusGraph, NCE, sample_syndata_torusgraph, TorusGraphInformation
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
