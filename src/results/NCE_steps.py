@@ -83,6 +83,8 @@ if __name__ == "__main__":
     print(f"Time taken = {time.time() - start_time}")
     print(steps_dict)
     plot(steps_dict, 'Boxplot of NCE estimation with varying steps')
+    plt.xlabel('Steps')
+    plt.ylabel('NMI')
     plt.savefig('src/plots/NCE_syn_steps.png')
     plt.show()
 
