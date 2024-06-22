@@ -1,0 +1,130 @@
+836c23f - CarolineMortensen, 48 minutes ago : Tests2 (#43)
+2bba1c8 - christineschutt, 56 minutes ago : Merge pull request #41 from Apros7/KmodelsStill
+dc9fce1 - CarolineMortensen, 57 minutes ago : TEST LOSS (#42)
+3bef637 - christineschutt, 57 minutes ago : Merge branch 'main' of https://github.com/Apros7/TorusNeuralMixtureModels into KmodelsStill
+4802648 - christineschutt, 59 minutes ago : Added more statistcal tests
+5f5c213 - christineschutt, 61 minutes ago : Added plots and statistical tests
+76526e4 - Lucas Vilsen, 2 days ago : Merge pull request #40 from Apros7/AAA_small_adjustments
+c3a8ad0 - apros7, 2 days ago : Merge branch 'main' of https://github.com/Apros7/TorusNeuralMixtureModels into AAA_small_adjustments
+a966c37 - apros7, 2 days ago : init
+cba2fdd - apros7, 2 days ago : init
+dc262ee - Carla Zdravkovic Hugod, 2 days ago : new max and min on heatmap (#39)
+bb87174 - Carla Zdravkovic Hugod, 2 days ago : heatmap fix (#38)
+52d2d5e - Lucas Vilsen, 2 days ago : nmi (#37)
+db08196 - Lucas Vilsen, 2 days ago : Merge pull request #36 from Apros7/clean_up_imports
+912ace0 - christineschutt, 3 days ago : Data sampled for K=3, mixture models  for 1-5
+e2cd558 - CarlaZdravkovicHugod, 3 days ago : import cleanups
+01f4092 - Carla Zdravkovic Hugod, 3 days ago : plot fix (#35)
+3d241d0 - Lucas Vilsen, 3 days ago : Merge pull request #34 from Apros7/carla
+d08733e - Carla Zdravkovic Hugod, 3 days ago : plots etc (#33)
+a4eb5e3 - apros7, 3 days ago : real_loss_over_k
+8c6ed14 - apros7, 3 days ago : makefile again
+65be78f - apros7, 3 days ago : makefile and new files
+3c1e4e2 - apros7, 3 days ago : makefile changes
+c5f8398 - apros7, 3 days ago : adjusted makefile
+7bcc9f2 - apros7, 3 days ago : init
+428d9be - Lucas Vilsen, 3 days ago : visualize preds from torus graph (#32)
+5aee78b - Lucas Vilsen, 4 days ago : Merge pull request #31 from Apros7/nce_plot_fix
+4f769cf - apros7, 4 days ago : init
+db9a374 - Lucas Vilsen, 4 days ago : Merge pull request #30 from Apros7/true_phi
+a8513cb - CarlaZdravkovicHugod, 4 days ago : with true phi plot
+b048941 - Carla Zdravkovic Hugod, 4 days ago : Real phi plot (#29)
+9219ba6 - Lucas Vilsen, 4 days ago : init (#28)
+9a5764e - Lucas Vilsen, 4 days ago : Merge pull request #27 from Apros7/toolbox_update
+6da3cb4 - apros7, 4 days ago : Merge branch 'main' of https://github.com/Apros7/TorusNeuralMixtureModels into toolbox_update
+18370d7 - apros7, 5 days ago : makefile, readme adjustments
+4c99b3f - apros7, 5 days ago : readme
+754eeb5 - apros7, 5 days ago : now visualize sm vs tg
+e600da9 - apros7, 5 days ago : score matching saving phi in class
+ce877d3 - apros7, 5 days ago : toolbox small error
+5eb1ffb - apros7, 6 days ago : makefile and readme
+f2ba849 - apros7, 6 days ago : see nce loss
+601e2fa - apros7, 6 days ago : cleanup
+49d6400 - apros7, 6 days ago : results redone
+7bbf5aa - apros7, 6 days ago : toolbox done
+995b450 - apros7, 6 days ago : real data scripts
+44e757f - apros7, 6 days ago : readme
+3455e03 - Carla Zdravkovic Hugod, 6 days ago : proper nmi (#26)
+3040a70 - Carla Zdravkovic Hugod, 7 days ago : NMI working and plots moved (#25)
+ff9569f - Lucas Vilsen, 7 days ago : Merge pull request #24 from Apros7/NCEbug
+9243788 - Lucas Vilsen, 7 days ago : Merge branch 'main' into NCEbug
+4c7bc19 - apros7, 7 days ago : find best nce lr for tg
+f17bb6b - Carla Zdravkovic Hugod, 7 days ago : Model compare 2 (#22)
+db48eda - Lucas Vilsen, 7 days ago : init (#20)
+596b810 - apros7, 7 days ago : init
+3b87ae6 - CarolineMortensen, 7 days ago : Merge pull request #19 from Apros7/new_plv
+369951e - Caroline Mortensen, 7 days ago : save plot
+4bdf2ac - CarolineMortensen, 7 days ago : Merge pull request #17 from Apros7/new_plv
+53a4076 - Caroline Mortensen, 7 days ago : plv + plot
+1769a8c - Lucas Vilsen, 7 days ago : Merge pull request #18 from Apros7/model_compare_2
+6db32f2 - Your Name, 7 days ago : changes to nce for mixtuyre
+548ed88 - apros7, 7 days ago : fix log prob data
+06b6fe3 - Your Name, 7 days ago : dimension prob
+06f1157 - Your Name, 7 days ago : updated nce
+c7eecc4 - Caroline Mortensen, 7 days ago : plv
+412175f - Your Name, 7 days ago : classify
+a1f0118 - Your Name, 7 days ago : NMI and real data
+52b020d - Your Name, 9 days ago : eq 12 matsuda begin
+846f669 - Your Name, 9 days ago : NMI
+a0c47c2 - Your Name, 9 days ago : removed comment
+9b622de - Your Name, 9 days ago : added descrip to NCE
+49ed3c2 - Your Name, 9 days ago : compare models
+9a6f053 - Lucas Vilsen, 9 days ago : cross validation parameter estimation difference plot (SM vs NCE) (#15)
+a76d7ae - Carla Zdravkovic Hugod, 9 days ago : plot is good (#14)
+edaed9e - Lucas Vilsen, 9 days ago : Merge pull request #11 from Apros7/plot
+e73a565 - Your Name, 9 days ago : nce vs sm plot working
+d631a11 - Lucas Vilsen, 9 days ago : init (#13)
+3d2f031 - Caroline Mortensen, 9 days ago : SM plot
+58cafd6 - Your Name, 9 days ago : changing branch
+0efd607 - Lucas Vilsen, 9 days ago : init (#13)
+c170c10 - Your Name, 9 days ago : sm plot not done yet
+025fe1b - Lucas Vilsen, 9 days ago : Merge pull request #12 from Apros7/SM_plot
+80559e2 - Caroline Mortensen, 9 days ago : SM plot
+fcf5f81 - Your Name, 9 days ago : plot nce script and other fixes
+c33f422 - christineschutt, 9 days ago : Merge pull request #10 from Apros7/nce
+636d748 - Your Name, 9 days ago : clean up
+87f3912 - Your Name, 9 days ago : plot included
+1f805cb - Your Name, 9 days ago : plots
+bb899ff - Lucas Vilsen, 9 days ago : Merge pull request #9 from Apros7/ScoreMatching
+75a5f4f - Lucas Vilsen, 9 days ago : Merge pull request #5 from Apros7/nce
+039badf - Lucas Vilsen, 9 days ago : Merge branch 'main' into nce
+40c2acf - christineschutt, 9 days ago : Minor fix
+301e338 - christineschutt, 9 days ago : Remove unnecessary comments
+ae37188 - Your Name, 9 days ago : pathing issues
+12917eb - Your Name, 10 days ago : NCE done and working
+7c00c28 - Your Name, 9 days ago : just a note
+429219e - Your Name, 10 days ago : rebase
+25fd682 - christineschutt, 10 days ago : Score Matching in single class
+b7b0ce2 - Your Name, 10 days ago : plot
+c1f34bb - Your Name, 10 days ago : NCE done and working
+91cd0f5 - christineschutt, 10 days ago : ScoreMatching in class
+d026db9 - Lucas Vilsen, 10 days ago : Merge pull request #8 from Apros7/relative_import
+0a1a12e - apros7, 10 days ago : releative import
+5ec2590 - Lucas Vilsen, 10 days ago : Sample from torus graph (#6)
+36aca03 - Lucas Vilsen, 10 days ago : Sample from torus graph (#6)
+e5a09d3 - Your Name, 10 days ago : not done yet
+3f625d6 - christineschutt, 10 days ago : import scipy
+913e2af - Your Name, 7 weeks ago : added optimizer value pi
+f084ac6 - Your Name, 7 weeks ago : Implemented some of the changes after guidance meeting
+f9bb858 - Your Name, 8 weeks ago : The NCE method. I think it is good. It still needs to be tested with data and it is still missing a noise distribution. I have tried to annotate the code, to clarify it.
+87836e3 - Your Name, 8 weeks ago : made a change to log_p_TG since torch has no function logexp
+fcb7865 - apros7, 8 weeks ago : structure change
+6cf8c67 - apros7, 8 weeks ago : src data
+d5046b0 - apros7, 9 weeks ago : make instructions
+a3d17ca - Lucas Vilsen, 9 weeks ago : Merge pull request #3 from CarlaZdravkovicHugod/NCE
+0b23e54 - Your Name, 9 weeks ago : implemented loss function for NCE
+5729132 - apros7, 9 weeks ago : numpy score_matching
+4b6d89b - apros7, 9 weeks ago : setup
+d047967 - apros7, 9 weeks ago : .gitignore
+7c061b8 - apros7, 9 weeks ago : README.md
+e75db9f - apros7, 9 weeks ago : makefile
+f725297 - Lucas Vilsen, 9 weeks ago : Merge pull request #2 from CarlaZdravkovicHugod/NCE
+862770d - Your Name, 9 weeks ago : Found an error in the code. Just fixed it
+f60edd2 - Your Name, 9 weeks ago : Revert "Adding NCE method"
+7c927f6 - Your Name, 9 weeks ago : Revert "Adding NCE method"
+bb10d63 - Your Name, 9 weeks ago : Adding NCE method
+f28cb2f - Your Name, 4 months ago : hej
+d23380d - Your Name, 4 months ago : Deleted the before mentioned pdf file
+df1edac - Your Name, 4 months ago : Just added a pdf and deleted it again
+4a6c853 - apros7, 4 months ago : init
+4b631bf - apros7, 5 months ago : first commit
